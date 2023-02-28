@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>C# Projects</title>
+    <script>
+        function openTab(tabName) {
+            // console.log(document.getElementById(tabName).style.display);
+            // console.log(getComputedStyle(document.getElementById(tabName)).display);
+
+            if (getComputedStyle(document.getElementById(tabName)).display === "none") {
+                var i, x;
+                x = document.getElementsByClassName("containerTab");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                document.getElementById(tabName).style.display = "block";
+            } else {
+                document.getElementById(tabName).style.display = "none";
+            }
+        }
+    </script>
+</head>
+
+<!-- Using code from https://www.w3schools.com/howto/howto_js_expanding_grid.asp to create the needed design -->
+
+<body>
+    <header>
+        <a id="logo_link" href="index.html">
+            <img class="logo" src="images/my_picture.jpg" alt="My picture">
+        </a>
+        <nav>
+            <a href="index.html">Home/Resume</a>
+            <a href="python.html">Python Projects</a>
+            <a href="csharp.html">C# Projects</a>
+            <a href="site-plan.html">Site Plan</a>
+        </nav>
+    </header>
+    <main class="projects">
+        <h1>Cycle Game</h1>
+        <p>The cycle game is a game coded in C# that I created in my CSE 210 Programming with Classes class while
+            attending Brigham Young University-Idaho.</p>
+        <h2>Files</h2>
+        <div class="row">
+            <div class="column" onclick="openTab('b1');">Program.cs</div>
+            <div class="column" onclick="openTab('b2');">Constants.cs</div>
+            <div class="column" onclick="openTab('b3');">Director.cs</div>
+            <div class="column" onclick="openTab('b4');">Cast.cs</div>
+            <div class="column" onclick="openTab('b5');">Actor.cs</div>
+            <div class="column" onclick="openTab('b6');">Cycle.cs</div>
+            <div class="column" onclick="openTab('b7');">Color.cs</div>
+            <div class="column" onclick="openTab('b8');">Point.cs</div>
+            <div class="column" onclick="openTab('b9');">Action.cs</div>
+            <div class="column" onclick="openTab('b10');">ControlActorsAction.cs</div>
+            <div class="column" onclick="openTab('b11');">DrawActorsAction.cs</div>
+            <div class="column" onclick="openTab('b12');">HandleCollisionsAction.cs</div>
+            <div class="column" onclick="openTab('b13');">MoveActorsAction.cs</div>
+            <div class="column" onclick="openTab('b14');">Script.cs</div>
+            <div class="column" onclick="openTab('b15');">KeyboardService.cs</div>
+            <div class="column" onclick="openTab('b16');">VideoService.cs</div>
+        </div>
+
+        <!-- The expanding grid (hidden by default) -->
+        <div id="b1" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Program.cs</h2>
+            <pre>
+                <code>
+using Unit05.Game;
+using Unit05.Game.Casting;
+using Unit05.Game.Directing;
+using Unit05.Game.Scripting;
+using Unit05.Game.Services;
+
+
+namespace Unit05
+{
+    /// <summary>
+    /// The program's entry point.
+    /// </summary>
+    class Program
+    {
+        
+        /// <summary>
+        /// Starts the program using the given arguments.
+        /// </summary>
+        /// <param name="args">The given arguments.</param>
+        static void Main(string[] args)
+        {
+            // create the cast
+            Cast cast = new Cast();
+            // cast.AddActor("food", new Food());
+            cast.AddActor("cycles", new Cycle(300, Constants.RED));
+            cast.AddActor("cycles", new Cycle(600, Constants.GREEN));
+            cast.AddActor("score", new Score());
+
+            // create the services
+            KeyboardService keyboardService = new KeyboardService();
+            VideoService videoService = new VideoService(false);
+           
+            // create the script
+            Script script = new Script();
+            script.AddAction("input", new ControlActorsAction(keyboardService));
+            script.AddAction("update", new MoveActorsAction());
+            script.AddAction("update", new HandleCollisionsAction());
+            script.AddAction("output", new DrawActorsAction(videoService));
+
+            // start the game
+            Director director = new Director(videoService);
+            director.StartGame(cast, script);
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+
+        <div id="b2" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Constants.cs</h2>
+            <pre>
+                <code>
+using System;
+using Microsoft.VisualBasic;
+using Unit05.Game.Casting;
+
+namespace Unit05.Game
+{
+    /// <summary>
+    /// <para>A tasty item that snakes like to eat.</para>
+    /// <para>
+    /// The responsibility of Food is to select a random position and points that it's worth.
+    /// </para>
+    /// </summary>
+    public class Constants
+    {
+        public static int COLUMNS = 40;
+        public static int ROWS = 20;
+        public static int CELL_SIZE = 15;
+        public static int MAX_X = 900;
+        public static int MAX_Y = 600;
+
+        public static int FRAME_RATE = 10;
+        public static int FONT_SIZE = 15;
+        public static string CAPTION = "Snake";
+        public static int SNAKE_LENGTH = 8;
+
+        public static Color RED = new Color(255, 0, 0);
+        public static Color WHITE = new Color(255, 255, 255);
+        public static Color YELLOW = new Color(255, 255, 0);
+        public static Color GREEN = new Color(0, 255, 0);
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+
+        <div id="b3" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Director.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+using Unit05.Game.Casting;
+using Unit05.Game.Scripting;
+using Unit05.Game.Services;
+
+
+namespace Unit05.Game.Directing
+{
+    /// <summary>
+    /// <para>A person who directs the game.</para>
+    /// <para>
+    /// The responsibility of a Director is to control the sequence of play.
+    /// </para>
+    /// </summary>
+    public class Director
+    {
+        private VideoService videoService = null;
+
+        /// <summary>
+        /// Constructs a new instance of Director using the given KeyboardService and VideoService.
+        /// </summary>
+        /// <param name="videoService">The given VideoService.</param>
+        public Director(VideoService videoService)
+        {
+            this.videoService = videoService;
+        }
+
+        /// <summary>
+        /// Starts the game by running the main game loop for the given cast and script.
+        /// </summary>
+        /// <param name="cast">The given cast.</param>
+        /// <param name="script">The given script.</param>
+        public void StartGame(Cast cast, Script script)
+        {
+            videoService.OpenWindow();
+            while (videoService.IsWindowOpen())
+            {
+                ExecuteActions("input", cast, script);
+                ExecuteActions("update", cast, script);
+                ExecuteActions("output", cast, script);
+            }
+            videoService.CloseWindow();
+        }
+
+        /// <summary>
+        /// Calls execute for each action in the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <param name="cast">The cast of actors.</param>
+        /// <param name="script">The script of actions.</param>
+        private void ExecuteActions(string group, Cast cast, Script script)
+        {
+            List<Action> actions = script.GetActions(group);
+            foreach(Action action in actions)
+            {
+                action.Execute(cast, script);
+            }
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b4" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Cast.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+
+namespace Unit05.Game.Casting
+{
+    /// <summary>
+    /// <para>A collection of actors.</para>
+    /// <para>
+    /// The responsibility of a cast is to keep track of a collection of actors. It has methods for 
+    /// adding, removing and getting them by a group name.
+    /// </para>
+    /// </summary>
+    public class Cast
+    {
+        private Dictionary<string, List<Actor>> actors = new Dictionary<string, List<Actor>>();
+
+        /// <summary>
+        /// Constructs a new instance of Cast.
+        /// </summary>
+        public Cast()
+        {
+        }
+
+        /// <summary>
+        /// Adds the given actor to the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <param name="actor">The actor to add.</param>
+        public void AddActor(string group, Actor actor)
+        {
+            if (!actors.ContainsKey(group))
+            {
+                actors[group] = new List<Actor>();
+            }
+
+            if (!actors[group].Contains(actor))
+            {
+                actors[group].Add(actor);
+            }
+        }
+
+        /// <summary>
+        /// Gets the actors in the given group. Returns an empty list if there aren't any.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <returns>The list of actors.</returns>
+        public List<Actor> GetActors(string group)
+        {
+            List<Actor> results = new List<Actor>();
+            if (actors.ContainsKey(group))
+            {
+                results.AddRange(actors[group]);
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Gets all the actors in the cast.
+        /// </summary>
+        /// <returns>A list of all actors.</returns>
+        public List<Actor> GetAllActors()
+        {
+            List<Actor> results = new List<Actor>();
+            foreach (List<Actor> result in actors.Values)
+            {
+                results.AddRange(result);
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Gets the first actor in the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <returns>The first actor.</returns>
+        public Actor GetFirstActor(string group)
+        {
+            Actor result = null;
+            if (actors.ContainsKey(group))
+            {
+                if (actors[group].Count > 0)
+                {
+                    result = actors[group][0];
+                }
+            }
+            return result;
+        }
+        public Actor GetSecondActor(string group)
+        {
+            Actor result = null;
+            if (actors.ContainsKey(group))
+            {
+                if (actors[group].Count > 0)
+                {
+                    result = actors[group][1];
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Removes the given actor from the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <param name="actor">The actor to remove.</param>
+        public void RemoveActor(string group, Actor actor)
+        {
+            if (actors.ContainsKey(group))
+            {
+                actors[group].Remove(actor);
+            }
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b5" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Actor.cs</h2>
+            <pre>
+                <code>
+using System;
+
+namespace Unit05.Game.Casting
+{
+    /// <summary>
+    /// <para>A thing that participates in the game.</para>
+    /// <para>
+    /// The responsibility of Actor is to keep track of its appearance, position and velocity in 2d 
+    /// space.
+    /// </para>
+    /// </summary>
+    public class Actor
+    {
+        private string text = "";
+        private int fontSize = 15;
+        private Color color = Constants.WHITE;
+        private Point position = new Point(0, 0);
+        private Point velocity = new Point(0, 0);
+
+        /// <summary>
+        /// Constructs a new instance of Actor.
+        /// </summary>
+        public Actor()
+        {
+        }
+
+        /// <summary>
+        /// Gets the actor's color.
+        /// </summary>
+        /// <returns>The color.</returns>
+        public Color GetColor()
+        {
+            return color;
+        }
+
+        /// <summary>
+        /// Gets the actor's font size.
+        /// </summary>
+        /// <returns>The font size.</returns>
+        public int GetFontSize()
+        {
+            return fontSize;
+        }
+
+        /// <summary>
+        /// Gets the actor's position.
+        /// </summary>
+        /// <returns>The position.</returns>
+        public Point GetPosition()
+        {
+            return position;
+        }
+
+        /// <summary>
+        /// Gets the actor's text.
+        /// </summary>
+        /// <returns>The text.</returns>
+        public string GetText()
+        {
+            return text;
+        }
+
+        /// <summary>
+        /// Gets the actor's current velocity.
+        /// </summary>
+        /// <returns>The velocity.</returns>
+        public Point GetVelocity()
+        {
+            return velocity;
+        }
+
+        /// <summary>
+        /// Moves the actor to its next position according to its velocity. Will wrap the position 
+        /// from one side of the screen to the other when it reaches the maximum x and y 
+        /// values.
+        /// </summary>
+        public virtual void MoveNext()
+        {
+            int x = ((position.GetX() + velocity.GetX()) + Constants.MAX_X) % Constants.MAX_X;
+            int y = ((position.GetY() + velocity.GetY()) + Constants.MAX_Y) % Constants.MAX_Y;
+            position = new Point(x, y);
+        }
+
+        /// <summary>
+        /// Sets the actor's color to the given value.
+        /// </summary>
+        /// <param name="color">The given color.</param>
+        /// <exception cref="ArgumentException">When color is null.</exception>
+        public void SetColor(Color color)
+        {
+            if (color == null)
+            {
+                throw new ArgumentException("color can't be null");
+            }
+            this.color = color;
+        }
+
+        /// <summary>
+        /// Sets the actor's font size to the given value.
+        /// </summary>
+        /// <param name="fontSize">The given font size.</param>
+        /// <exception cref="ArgumentException">
+        /// When font size is less than or equal to zero.
+        /// </exception>
+        public void SetFontSize(int fontSize)
+        {
+            if (fontSize <= 0)
+            {
+                throw new ArgumentException("fontSize must be greater than zero");
+            }
+            this.fontSize = fontSize;
+        }
+
+        /// <summary>
+        /// Sets the actor's position to the given value.
+        /// </summary>
+        /// <param name="position">The given position.</param>
+        /// <exception cref="ArgumentException">When position is null.</exception>
+        public void SetPosition(Point position)
+        {
+            if (position == null)
+            {
+                throw new ArgumentException("position can't be null");
+            }
+            this.position = position;
+        }
+
+        /// <summary>
+        /// Sets the actor's text to the given value.
+        /// </summary>
+        /// <param name="text">The given text.</param>
+        /// <exception cref="ArgumentException">When text is null.</exception>
+        public void SetText(string text)
+        {
+            if (text == null)
+            {
+                throw new ArgumentException("text can't be null");
+            }
+            this.text = text;
+        }
+
+        /// <summary>
+        /// Sets the actor's velocity to the given value.
+        /// </summary>
+        /// <param name="velocity">The given velocity.</param>
+        /// <exception cref="ArgumentException">When velocity is null.</exception>
+        public void SetVelocity(Point velocity)
+        {
+            if (velocity == null)
+            {
+                throw new ArgumentException("velocity can't be null");
+            }
+            this.velocity = velocity;
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b6" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Cycle.cs</h2>
+            <pre>
+                <code>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Unit05.Game.Casting
+{
+    /// <summary>
+    /// <para>A long limbless reptile.</para>
+    /// <para>The responsibility of Snake is to move itself.</para>
+    /// </summary>
+    public class Cycle : Actor
+    {
+        private List<Actor> segments = new List<Actor>();
+        private int startPoint = Constants.MAX_X/2;
+        private Color bodyColor;
+
+        /// <summary>
+        /// Constructs a new instance of a Cycle.
+        /// </summary>
+        public Cycle(int startPoint, Color color)
+        {
+            bodyColor = color;
+            PrepareBody(startPoint, bodyColor);
+        }
+
+        /// <summary>
+        /// Gets the cycles's segments.
+        /// </summary>
+        /// <returns>The body segments in a List.</returns>
+        public List<Actor> GetBody()
+        {
+            return new List<Actor>(segments.Skip(1).ToArray());
+        }
+
+        /// <summary>
+        /// Gets the cycles's head segment.
+        /// </summary>
+        /// <returns>The head segment as an instance of Actor.</returns>
+        public Actor GetHead()
+        {
+            return segments[0];
+        }
+
+        /// <summary>
+        /// Gets the cycle's segments (including the head).
+        /// </summary>
+        /// <returns>A list of cycle segments as instances of Actors.</returns>
+        public List<Actor> GetSegments()
+        {
+            return segments;
+        }
+
+        /// <summary>
+        /// Grows the cycle's tail by the given number of segments.
+        /// </summary>
+        /// <param name="numberOfSegments">The number of segments to grow.</param>
+        public void GrowTail(int numberOfSegments)
+        {
+            for (int i = 0; i < numberOfSegments; i++)
+            {
+                Actor tail = segments.Last<Actor>();
+                Point velocity = tail.GetVelocity();
+                Point offset = velocity.Reverse();
+                Point position = tail.GetPosition().Add(offset);
+
+                Actor segment = new Actor();
+                segment.SetPosition(position);
+                segment.SetVelocity(velocity);
+                segment.SetText("#");
+                segment.SetColor(bodyColor);
+                segments.Add(segment);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void MoveNext()
+        {
+            foreach (Actor segment in segments)
+            {
+                segment.MoveNext();
+            }
+
+            for (int i = segments.Count - 1; i > 0; i--)
+            {
+                Actor trailing = segments[i];
+                Actor previous = segments[i - 1];
+                Point velocity = previous.GetVelocity();
+                trailing.SetVelocity(velocity);
+            }
+        }
+
+        /// <summary>
+        /// Turns the head of the cycle in the given direction.
+        /// </summary>
+        /// <param name="velocity">The given direction.</param>
+        public void TurnHead(Point direction)
+        {
+            segments[0].SetVelocity(direction);
+        }
+
+        /// <summary>
+        /// Prepares the cycle body for moving.
+        /// </summary>
+        private void PrepareBody(int startPoint, Color color)
+        {
+            int x = startPoint;
+            int y = Constants.MAX_Y / 2;
+
+            for (int i = 0; i < Constants.SNAKE_LENGTH; i++)
+            {
+                Point position = new Point(x - i * Constants.CELL_SIZE, y);
+                Point velocity = new Point(1 * Constants.CELL_SIZE, 0);
+                string text = i == 0 ? "8" : "#";
+                // Color color = i == 0 ? Constants.YELLOW : Constants.GREEN;
+
+                Actor segment = new Actor();
+                segment.SetPosition(position);
+                segment.SetVelocity(velocity);
+                segment.SetText(text);
+                segment.SetColor(color);
+                segments.Add(segment);
+            }
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b7" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Color.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+
+namespace Unit05.Game.Casting
+{
+    /// <summary>
+    /// <para>A color.</para>
+    /// <para>The responsibility of Color is to hold and provide information about itself. Color has 
+    /// a few convenience methods for comparing and converting them.
+    /// </para>
+    /// </summary>
+    public class Color
+    {
+        private int red = 0;
+        private int green = 0;
+        private int blue = 0;
+        private int alpha = 255;
+
+        /// <summary>
+        /// Constructs a new instance of Color using the given red, green and blue values.
+        /// </summary>
+        /// <param name="red">The given red value (0-255).</param>
+        /// <param name="green">The given green value (0-255).</param>
+        /// <param name="blue">The given blue value (0-255).</param>
+        public Color(int red, int green, int blue)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
+
+        /// <summary>
+        /// Gets the color's alpha value.
+        /// </summary>
+        /// <returns>The alpha value.</returns>
+        public int GetAlpha()
+        {
+            return alpha;
+        }
+
+        /// <summary>
+        /// Gets the color's blue value.
+        /// </summary>
+        /// <returns>The blue value.</returns>
+        public int GetBlue()
+        {
+            return blue;
+        }
+
+        /// <summary>
+        /// Gets the color's green value.
+        /// </summary>
+        /// <returns>The green value.</returns>
+        public int GetGreen()
+        {
+            return green;
+        }
+
+        /// <summary>
+        /// Gets the color's red value.
+        /// </summary>
+        /// <returns>The red value.</returns>
+        public int GetRed()
+        {
+            return red;
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b8" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Point.cs</h2>
+            <pre>
+                <code>
+namespace Unit05.Game.Casting
+{
+    /// <summary>
+    /// <para>A distance from a relative origin (0, 0).</para>
+    /// <para>
+    /// The responsibility of Point is to hold and provide information about itself. Point has a few 
+    /// convenience methods for adding, scaling, and comparing them.
+    /// </para>
+    /// </summary>
+    public class Point
+    {
+        private int x = 0;
+        private int y = 0;
+
+        /// <summary>
+        /// Constructs a new instance of Point using the given x and y values.
+        /// </summary>
+        /// <param name="x">The given x value.</param>
+        /// <param name="y">The given y value.</param>
+        public Point(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        /// <summary>
+        /// Adds the given point to this one by summing the x and y values.
+        /// </summary>
+        /// <param name="other">The point to add.</param>
+        /// <returns>The sum as a new Point.</returns>
+        public Point Add(Point other)
+        {
+            int x = this.x + other.GetX();
+            int y = this.y + other.GetY();
+            return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Whether or not this Point is equal to the given one.
+        /// </summary>
+        /// <param name="other">The point to compare.</param>
+        /// <returns>True if both x and y are equal; false if otherwise.</returns>
+        public bool Equals(Point other)
+        {
+            return this.x == other.GetX() && this.y == other.GetY();
+        }
+
+        /// <summary>
+        /// Gets the value of the x coordinate.
+        /// </summary>
+        /// <returns>The x coordinate.</returns>
+        public int GetX()
+        {
+            return x;
+        }
+
+        /// <summary>
+        /// Gets the value of the y coordinate.
+        /// </summary>
+        /// <returns>The y coordinate.</returns>
+        public int GetY()
+        {
+            return y;
+        }
+
+        /// <summary>
+        /// Reverses the point by inverting both x and y values.
+        /// </summary>
+        /// <returns>A new point that is reversed.</returns>
+        public Point Reverse()
+        {
+            int x = this.x * -1;
+            int y = this.y * -1;
+            return new Point(x, y);
+        }
+        
+        /// <summary>
+        /// Scales the point by multiplying the x and y values by the provided factor.
+        /// </summary>
+        /// <param name="factor">The scaling factor.</param>
+        /// <returns>A scaled instance of Point.</returns>
+        public Point Scale(int factor)
+        {
+            int x = this.x * factor;
+            int y = this.y * factor;
+            return new Point(x, y);
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b9" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Action.cs</h2>
+            <pre>
+                <code>
+using Unit05.Game.Casting;
+
+
+namespace Unit05.Game.Scripting 
+{
+    /// <summary>
+    /// <para>A thing that is done.</para>
+    /// <para>
+    /// The responsibility of action is to do something that is integral or important in the game. 
+    /// Thus, it has one method, Execute(...), which should be overridden by derived classes.
+    /// </para>
+    /// </summary>
+    public interface Action
+    {
+        /// <summary>
+        /// Executes something that is important in the game. This method should be overriden by 
+        /// derived classes.
+        /// </summary>
+        /// <param name="cast">The cast of actors.</param>
+        /// <param name="script">The script of actions.</param>
+        void Execute(Cast cast, Script script);
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b10" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>ControlActorsAction.cs</h2>
+            <pre>
+                <code>
+using Unit05.Game.Casting;
+using Unit05.Game.Services;
+
+
+namespace Unit05.Game.Scripting
+{
+    /// <summary>
+    /// <para>An input action that controls the snake.</para>
+    /// <para>
+    /// The responsibility of ControlActorsAction is to get the direction and move the snake's head.
+    /// </para>
+    /// </summary>
+    public class ControlActorsAction : Action
+    {
+        private KeyboardService keyboardService;
+        private Point direction = new Point(Constants.CELL_SIZE, 0);
+        private Point direction2 = new Point(Constants.CELL_SIZE, 0);
+
+        /// <summary>
+        /// Constructs a new instance of ControlActorsAction using the given KeyboardService.
+        /// </summary>
+        public ControlActorsAction(KeyboardService keyboardService)
+        {
+            this.keyboardService = keyboardService;
+        }
+
+        /// <inheritdoc/>
+        public void Execute(Cast cast, Script script)
+        {
+            // left
+            if (keyboardService.IsKeyDown("a"))
+            {
+                direction = new Point(-Constants.CELL_SIZE, 0);
+            }
+
+            // right
+            if (keyboardService.IsKeyDown("d"))
+            {
+                direction = new Point(Constants.CELL_SIZE, 0);
+            }
+
+            // up
+            if (keyboardService.IsKeyDown("w"))
+            {
+                direction = new Point(0, -Constants.CELL_SIZE);
+            }
+
+            // down
+            if (keyboardService.IsKeyDown("s"))
+            {
+                direction = new Point(0, Constants.CELL_SIZE);
+            }
+
+            Cycle snake = (Cycle)cast.GetFirstActor("cycles");
+            snake.TurnHead(direction);
+
+            // left
+            if (keyboardService.IsKeyDown("j"))
+            {
+                direction2 = new Point(-Constants.CELL_SIZE, 0);
+            }
+
+            // right
+            if (keyboardService.IsKeyDown("l"))
+            {
+                direction2 = new Point(Constants.CELL_SIZE, 0);
+            }
+
+            // up
+            if (keyboardService.IsKeyDown("i"))
+            {
+                direction2 = new Point(0, -Constants.CELL_SIZE);
+            }
+
+            // down
+            if (keyboardService.IsKeyDown("k"))
+            {
+                direction2 = new Point(0, Constants.CELL_SIZE);
+            }
+
+            Cycle snake2 = (Cycle)cast.GetSecondActor("cycles");
+            snake2.TurnHead(direction2);
+
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b11" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>DrawActorsAction.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+using Unit05.Game.Casting;
+using Unit05.Game.Services;
+
+
+namespace Unit05.Game.Scripting
+{
+    /// <summary>
+    /// <para>An output action that draws all the actors.</para>
+    /// <para>The responsibility of DrawActorsAction is to draw each of the actors.</para>
+    /// </summary>
+    public class DrawActorsAction : Action
+    {
+        private VideoService videoService;
+
+        /// <summary>
+        /// Constructs a new instance of ControlActorsAction using the given KeyboardService.
+        /// </summary>
+        public DrawActorsAction(VideoService videoService)
+        {
+            this.videoService = videoService;
+        }
+
+        /// <inheritdoc/>
+        public void Execute(Cast cast, Script script)
+        {
+            Cycle cycle1 = (Cycle)cast.GetFirstActor("cycles");
+            Cycle cycle2 = (Cycle)cast.GetSecondActor("cycles");
+
+            List<Cycle> cycles = new List<Cycle>();
+            cycles.Add(cycle1);
+            cycles.Add(cycle2);
+
+            foreach(Cycle cycle in cycles)
+            {
+            List<Actor> segments = cycle.GetSegments();
+            videoService.DrawActors(segments);
+            }
+
+            List<Actor> messages = cast.GetActors("messages");
+            
+            videoService.ClearBuffer();
+            videoService.DrawActors(messages);
+            videoService.FlushBuffer();
+        }
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b12" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>HandleCollisionsAction.cs</h2>
+            <pre>
+                <code>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Unit05.Game.Casting;
+using Unit05.Game.Services;
+
+
+namespace Unit05.Game.Scripting
+{
+    /// <summary>
+    /// <para>An update action that handles interactions between the actors.</para>
+    /// <para>
+    /// The responsibility of HandleCollisionsAction is to handle the situation when the snake 
+    /// collides with the food, or the snake collides with its segments, or the game is over.
+    /// </para>
+    /// </summary>
+    public class HandleCollisionsAction : Action
+    {
+        private bool isGameOver = false;
+        private int timeThrough = 0;
+
+        /// <summary>
+        /// Constructs a new instance of HandleCollisionsAction.
+        /// </summary>
+        public HandleCollisionsAction()
+        {
+        }
+
+        /// <inheritdoc/>
+        public void Execute(Cast cast, Script script)
+        {
+            if (isGameOver == false)
+            {
+                HandleBetweenCyclesCollisions(cast);
+                HandleSegmentCollisions(cast);
+                HandleGameOver(cast);
+            }
+        }
+
+        private void HandleBetweenCyclesCollisions(Cast cast)
+        {
+            Cycle cycle1 = (Cycle)cast.GetFirstActor("cycles");
+            Cycle cycle2 = (Cycle)cast.GetSecondActor("cycles");
+            Actor head1 = cycle1.GetHead();
+            Actor head2 = cycle2.GetHead();
+            List<Actor> segments1 = cycle1.GetSegments();
+            List<Actor> segments2 = cycle2.GetSegments();
+            foreach (Actor segment in segments1)
+            {
+                if (segment.GetPosition().Equals(head2.GetPosition()))
+                {
+                    isGameOver = true;
+                }
+            }
+
+            foreach (Actor segment in segments2)
+            {
+                if (segment.GetPosition().Equals(head1.GetPosition()))
+                {
+                    isGameOver = true;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Sets the game over flag if the snake collides with one of its segments.
+        /// </summary>
+        /// <param name="cast">The cast of actors.</param>
+        private void HandleSegmentCollisions(Cast cast)
+        {
+            Cycle snake = (Cycle)cast.GetFirstActor("cycles");
+            Actor head = snake.GetHead();
+            List<Actor> body = snake.GetBody();
+
+            foreach (Actor segment in body)
+            {
+                if (segment.GetPosition().Equals(head.GetPosition()))
+                {
+                    isGameOver = true;
+                }
+            }
+
+            snake = (Cycle)cast.GetSecondActor("cycles");
+            head = snake.GetHead();
+            body = snake.GetBody();
+
+            foreach (Actor segment in body)
+            {
+                if (segment.GetPosition().Equals(head.GetPosition()))
+                {
+                    isGameOver = true;
+                }
+            }
+        }
+
+        private void HandleGameOver(Cast cast)
+        {
+            if (isGameOver == true)
+            {
+                Cycle cycle1 = (Cycle)cast.GetFirstActor("cycles");
+                Cycle cycle2 = (Cycle)cast.GetSecondActor("cycles");
+                List<Actor> segments1 = cycle1.GetSegments();
+                List<Actor> segments2 = cycle2.GetSegments();
+
+                // create a "game over" message
+                int x = Constants.MAX_X / 2;
+                int y = Constants.MAX_Y / 2;
+                Point position = new Point(x, y);
+
+                Actor message = new Actor();
+                message.SetText("Game Over!");
+                message.SetPosition(position);
+                cast.AddActor("messages", message);
+
+                // make everything white
+                foreach (Actor segment in segments1)
+                {
+                    segment.SetColor(Constants.WHITE);
+                }
+                foreach (Actor segment in segments2)
+                {
+                    segment.SetColor(Constants.WHITE);
+                }
+            }
+            else
+            {
+                if (timeThrough == 4)
+                {
+                    Cycle cycle = (Cycle)cast.GetFirstActor("cycles");
+                    cycle.GrowTail(1);
+                    cycle = (Cycle)cast.GetSecondActor("cycles");
+                    cycle.GrowTail(1);
+
+                    timeThrough = 0;
+                }
+                else
+                {
+                    timeThrough++;
+                }
+            }
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b13" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>MoveActorsAction.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+using Unit05.Game.Casting;
+
+
+namespace Unit05.Game.Scripting
+{
+    // TODO: Implement the MoveActorsAction class here
+
+    // 1) Add the class declaration. Use the following class comment. Make sure you
+    //    inherit from the Action class.
+    public class MoveActorsAction : Action
+    {
+    /// <summary>
+    /// <para>An update action that moves all the actors.</para>
+    /// <para>
+    /// The responsibility of MoveActorsAction is to move all the actors.
+    /// </para>
+    /// </summary>
+
+    // 2) Create the class constructor. Use the following method comment.
+
+    /// <summary>
+    /// Constructs a new instance of MoveActorsAction.
+    /// </summary>
+        public MoveActorsAction()
+        {
+
+        }
+
+    // 3) Override the Execute(Cast cast, Script script) method. Use the following 
+    //    method comment. You custom implementation should do the following:
+    //    a) get all the actors from the cast
+    //    b) loop through all the actors
+    //    c) call the MoveNext() method on each actor.
+        public void Execute(Cast cast, Script script)
+        {
+            List<Actor> actors = cast.GetAllActors();
+            foreach (Actor actor in actors)
+            {
+                actor.MoveNext();
+            }
+            
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b14" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Script.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+
+
+namespace Unit05.Game.Scripting
+{
+    /// <summary>
+    /// <para>A collection of actions.</para>
+    /// <para>
+    /// The responsibility of a cast is to keep track of a collection of actions. It has methods for 
+    /// adding, removing and getting them by a group name.
+    /// </para>
+    /// </summary>
+    public class Script
+    {
+        private Dictionary<string, List<Action>> actions = new Dictionary<string, List<Action>>();
+
+        /// <summary>
+        /// Constructs a new instance of Script.
+        /// </summary>
+        public Script()
+        {
+        }
+
+        /// <summary>
+        /// Adds the given action to the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <param name="action">The action to add.</param>
+        public void AddAction(string group, Action action)
+        {
+            if (!actions.ContainsKey(group))
+            {
+                actions[group] = new List<Action>();
+            }
+
+            if (!actions[group].Contains(action))
+            {
+                actions[group].Add(action);
+            }
+        }
+
+        /// <summary>
+        /// Gets the actions in the given group. Returns an empty list if there aren't any.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <returns>The list of actions.</returns>
+        public List<Action> GetActions(string group)
+        {
+            List<Action> results = new List<Action>();
+            if (actions.ContainsKey(group))
+            {
+                results.AddRange(actions[group]);
+            }
+            return results;
+        }
+
+        /// <summary>
+        /// Removes the given action from the given group.
+        /// </summary>
+        /// <param name="group">The group name.</param>
+        /// <param name="action">The action to remove.</param>
+        public void RemoveActor(string group, Action action)
+        {
+            if (actions.ContainsKey(group))
+            {
+                actions[group].Remove(action);
+            }
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b15" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>KeyboardService.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+using Raylib_cs;
+using Unit05.Game.Casting;
+
+
+namespace Unit05.Game.Services
+{
+    /// <summary>
+    /// <para>Detects player input.</para>
+    /// <para>
+    /// The responsibility of a KeyboardService is to indicate whether or not a key is up or down.
+    /// </para>
+    /// </summary>
+    public class KeyboardService
+    {
+        private Dictionary<string, KeyboardKey> keys
+                = new Dictionary<string, KeyboardKey>();
+
+        /// <summary>
+        /// Constructs a new instance of KeyboardService using the given cell size.
+        /// </summary>
+        public KeyboardService()
+        {
+            keys["w"] = KeyboardKey.KEY_W;
+            keys["a"] = KeyboardKey.KEY_A;
+            keys["s"] = KeyboardKey.KEY_S;
+            keys["d"] = KeyboardKey.KEY_D;
+            keys["i"] = KeyboardKey.KEY_I;
+            keys["j"] = KeyboardKey.KEY_J;
+            keys["k"] = KeyboardKey.KEY_K;
+            keys["l"] = KeyboardKey.KEY_L;
+        }
+
+        /// <summary>
+        /// Checks if the given key is currently down.
+        /// </summary>
+        /// <param name="key">The given key (w, a, s, d, i, j, k, or l)</param>
+        /// <returns>True if the given key is down; false if otherwise.</returns>
+        public bool IsKeyDown(string key)
+        {
+            KeyboardKey raylibKey = keys[key.ToLower()];
+            return Raylib.IsKeyDown(raylibKey);
+        }
+
+        /// <summary>
+        /// Checks if the given key is currently up.
+        /// </summary>
+        /// <param name="key">The given key (w, a, s, d, i, j, k, or l)</param>
+        /// <returns>True if the given key is up; false if otherwise.</returns>
+        public bool IsKeyUp(string key)
+        {
+            KeyboardKey raylibKey = keys[key.ToLower()];
+            return Raylib.IsKeyUp(raylibKey);
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b16" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>VideoService.cs</h2>
+            <pre>
+                <code>
+using System.Collections.Generic;
+using System.Reflection.Metadata;
+using Raylib_cs;
+using Unit05.Game.Casting;
+
+
+namespace Unit05.Game.Services
+{
+    /// <summary>
+    /// <para>Outputs the game state.</para>
+    /// <para>
+    /// The responsibility of the class of objects is to draw the game state on the screen. 
+    /// </para>
+    /// </summary>
+    public class VideoService
+    {
+        private bool debug = false;
+
+        /// <summary>
+        /// Constructs a new instance of KeyboardService using the given cell size.
+        /// </summary>
+        /// <param name="cellSize">The cell size (in pixels).</param>
+        public VideoService(bool debug)
+        {
+            this.debug = debug;
+        }
+
+        /// <summary>
+        /// Closes the window and releases all resources.
+        /// </summary>
+        public void CloseWindow()
+        {
+            Raylib.CloseWindow();
+        }
+
+        /// <summary>
+        /// Clears the buffer in preparation for the next rendering. This method should be called at
+        /// the beginning of the game's output phase.
+        /// </summary>
+        public void ClearBuffer()
+        {
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib_cs.Color.BLACK);
+            if (debug)
+            {
+                DrawGrid();
+            }
+        }
+
+        /// <summary>
+        /// Draws the given actor's text on the screen.
+        /// </summary>
+        /// <param name="actor">The actor to draw.</param>
+        public void DrawActor(Actor actor)
+        {
+            string text = actor.GetText();
+            int x = actor.GetPosition().GetX();
+            int y = actor.GetPosition().GetY();
+            int fontSize = actor.GetFontSize();
+            Casting.Color c = actor.GetColor();
+            Raylib_cs.Color color = ToRaylibColor(c);
+            Raylib.DrawText(text, x, y, fontSize, color);
+        }
+
+        /// <summary>
+        /// Draws the given list of actors on the screen.
+        /// </summary>
+        /// <param name="actors">The list of actors to draw.</param>
+        public void DrawActors(List<Actor> actors)
+        {
+            foreach (Actor actor in actors)
+            {
+                DrawActor(actor);
+            }
+        }
+        
+        /// <summary>
+        /// Copies the buffer contents to the screen. This method should be called at the end of
+        /// the game's output phase.
+        /// </summary>
+        public void FlushBuffer()
+        {
+            Raylib.EndDrawing();
+        }
+
+        /// <summary>
+        /// Whether or not the window is still open.
+        /// </summary>
+        /// <returns>True if the window is open; false if otherwise.</returns>
+        public bool IsWindowOpen()
+        {
+            return !Raylib.WindowShouldClose();
+        }
+
+        /// <summary>
+        /// Opens a new window with the provided title.
+        /// </summary>
+        public void OpenWindow()
+        {
+            Raylib.InitWindow(Constants.MAX_X, Constants.MAX_Y, Constants.CAPTION);
+            Raylib.SetTargetFPS(Constants.FRAME_RATE);
+        }
+
+        /// <summary>
+        /// Draws a grid on the screen.
+        /// </summary>
+        private void DrawGrid()
+        {
+            for (int x = 0; x < Constants.MAX_X; x += Constants.CELL_SIZE)
+            {
+                Raylib.DrawLine(x, 0, x, Constants.MAX_Y, Raylib_cs.Color.GRAY);
+            }
+            for (int y = 0; y < Constants.MAX_Y; y += Constants.CELL_SIZE)
+            {
+                Raylib.DrawLine(0, y, Constants.MAX_X, y, Raylib_cs.Color.GRAY);
+            }
+        }
+
+        /// <summary>
+        /// Converts the given color to it's Raylib equivalent.
+        /// </summary>
+        /// <param name="color">The color to convert.</param>
+        /// <returns>A Raylib color.</returns>
+        private Raylib_cs.Color ToRaylibColor(Casting.Color color)
+        {
+            int r = color.GetRed();
+            int g = color.GetGreen();
+            int b = color.GetBlue();
+            int a = color.GetAlpha();
+            return new Raylib_cs.Color(r, g, b, a);
+        }
+
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <video controls>
+            <source src="videos/wdd130_personal_cycle.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </main>
+    <footer>
+        <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
+        <h3><a href="site-plan.html">Site Plan</a></h3>
+        <div class="social">
+            <a href="https://facebook.com" target="_blank">
+                <img src="images/facebook.png" alt="fb icon">
+            </a>
+            <a href="https://twitter.com" target="_blank">
+                <img src="images/twitter.png" alt="twitter icon">
+            </a>
+            <a href="https://instagram.com" target="_blank">
+                <img src="images/instagram.png" alt="instagram icon">
+            </a>
+        </div>
+    </footer>
+</body>
+
+</html>
