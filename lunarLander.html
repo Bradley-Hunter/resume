@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>Apollo 11 Lunar Lander Simulator</title>
+    <script>
+        function openTab(tabName) {
+            // console.log(document.getElementById(tabName).style.display);
+            // console.log(getComputedStyle(document.getElementById(tabName)).display);
+
+            if (getComputedStyle(document.getElementById(tabName)).display === "none") {
+                var i, x;
+                x = document.getElementsByClassName("containerTab");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                document.getElementById(tabName).style.display = "block";
+            } else {
+                document.getElementById(tabName).style.display = "none";
+            }
+        }
+    </script></head>
+<body>
+
+</body>
+</html>

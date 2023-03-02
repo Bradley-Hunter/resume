@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>List Of Lists</title>
+    <script>
+        function openTab(tabName) {
+            // console.log(document.getElementById(tabName).style.display);
+            // console.log(getComputedStyle(document.getElementById(tabName)).display);
+
+            if (getComputedStyle(document.getElementById(tabName)).display === "none") {
+                var i, x;
+                x = document.getElementsByClassName("containerTab");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                document.getElementById(tabName).style.display = "block";
+            } else {
+                document.getElementById(tabName).style.display = "none";
+            }
+        }
+    </script></head>
+<body>
+    <header>
+        <a id="logo_link" href="index.html">
+            <img class="logo" src="images/my_picture.jpg" alt="My picture">
+        </a>
+        <nav>
+            <a href="index.html">Home/Resume</a>
+            <a href="python.html">Python Projects</a>
+            <a href="csharp.html">C# Projects</a>
+            <a href="listOfLists.html">List of Lists Project</a>
+            <a href="site-plan.html">Site Plan</a>
+        </nav>
+    </header>
+    <main id="listOfListsBody" class="projects">
+        <div id="java" class="listOfListsContent">
+            <h1>Java Version</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad adipisci, aliquam consequuntur cum delectus eaque earum enim eos eveniet iure magnam maiores necessitatibus nisi quae quaerat sapiente tenetur ullam.</p>
+            <h2>Files</h2>
+            <div class="row">
+                <div class="column" onclick="openTab('b1');">Main.java</div>
+                <div class="column" onclick="openTab('b2');">MainMenu.java</div>
+                <div class="column" onclick="openTab('b3');">ViewMenu.java</div>
+                <div class="column" onclick="openTab('b4');">AddMenu.java</div>
+            </div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/0oIDNygpOJM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div id="cpp" class="listOfListsContent">
+            <h1>C++ Version</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aut soluta vero? Alias animi dolorem, dolores maxime nam nesciunt sint! Earum eveniet placeat praesentium rem saepe totam. Beatae, iusto, quod!</p>
+            <h2>Files</h2>
+            <div class="row">
+                <div class="column" onclick="openTab('b5');">main.cpp</div>
+                <div class="column" onclick="openTab('b6');">Menu.h</div>
+                <div class="column" onclick="openTab('b7');">Menu.cpp</div>
+                <div class="column" onclick="openTab('b8');">json.hpp</div>
+            </div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/NFAjAoil7KY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div id="b1" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Main.java</h2>
+            <pre>
+                <code>
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    private MainMenu mainMenu;
+    private AddMenu addMenu;
+    private ViewMenu viewMenu;
+    private static Main m;
+    static Scanner scan = new Scanner(System.in);
+    private static HashMap&ltString, ArrayList&ltString>> listOfLists;
+
+    public static void main(String[] args) throws ClassNotFoundException{
+        m = new Main();
+        m.mainMenu = new MainMenu();
+        m.viewMenu = new ViewMenu();
+        m.addMenu = new AddMenu();
+        boolean done = false;
+        m.GetListFromFile(m.GetFilename());
+        while (!done)
+        {
+            m.mainMenu.DisplayMenu(m.mainMenu.GetMenu());
+            String option = GetCurrentOption();
+            // System.out.println(option);
+            done = RunMainMenu(option);
+        }
+        m.SaveListToFile(m.GetFilename());
+    }
+
+    private void SaveListToFile(String filename){
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
+            objOut.writeObject(listOfLists);
+            objOut.close();
+
+            fileOut.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            // e.printStackTrace();
+        }
+    }
+    private String GetFilename(){
+        System.out.print("What file do you want to open from/save to? ");
+        return scan.nextLine();
+    }
+
+    private void GetListFromFile(String filename) throws ClassNotFoundException{
+        try {
+            FileInputStream fileIn = new FileInputStream(filename);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+            listOfLists = (HashMap&ltString, ArrayList&ltString>>) objectIn.readObject();
+            objectIn.close();
+            fileIn.close();
+        } catch (FileNotFoundException e) {
+            listOfLists = new HashMap&ltString, ArrayList&ltString>>();
+            System.out.println("File not found. Starting a new set of lists");
+            // e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            // e.printStackTrace();
+        }
+    }
+
+    private static String GetCurrentOption(){
+        System.out.print("\nWhat is your choice? ");
+        String option = scan.nextLine();
+        // System.out.println("What is your choice> ");
+        return option;
+    }
+
+    private static boolean RunMainMenu(String option){
+        if (option.equals("1")){
+            AddList();
+        }
+        else if (option.equals("2")){
+            ViewList();
+        }
+        else if (option.equals("3")){
+            DeleteList();
+        }
+        else if (option.equals("4")){
+        //     SaveList();
+            return true;
+        }
+        return false;
+    }
+
+    private static void DeleteList(){
+        DisplayListofLists();
+        System.out.println("Which list should be deleted?");
+        String option = GetCurrentOption();
+        System.out.println("\nAre you sure you want to delete the list? ");
+        String option2 = scan.nextLine();
+        // System.out.println("Are you sure you want to delete the list> ");
+        if (option2.toLowerCase().equals("yes")){
+            listOfLists.remove(option);
+        }
+    }
+
+    private static void DisplayListofLists(){
+        System.out.println("\nList of Lists:");
+        int count = 1;
+        for (String key : listOfLists.keySet()) {
+            System.out.println(count + ". " + key);
+            count++;
+        }
+    }
+
+    private static void ViewList(){
+        DisplayListofLists();
+        int quitSpot = listOfLists.size() + 1;
+        System.out.println(quitSpot + ". Quit");
+        boolean correctOption = false;
+        String name = GetCurrentOption();
+        boolean firstRun = true;
+        while (!correctOption){
+            if (!firstRun)
+            {
+                name = GetCurrentOption();
+            }
+            if (listOfLists.containsKey(name))
+            {
+                DisplayCurrentList(name);
+                correctOption = true;
+            }
+            else if (name.toLowerCase().equals("quit"))
+            {
+                return;
+            }
+            else
+            {
+                System.out.println("\nInvalid option.\n");
+            }
+            firstRun = false;
+        }
+        firstRun = true;
+        boolean done = false;
+        while (!done){
+            if (!firstRun)
+            {
+                DisplayCurrentList(name);
+            }
+            else{
+                firstRun = false;
+            }
+            m.viewMenu.DisplayMenu(m.viewMenu.GetMenu());
+            String option = GetCurrentOption();
+            done = RunViewMenu(name, option);
+        }
+    }
+
+    private static boolean RunViewMenu(String name, String option){
+        if (option.equals("1"))
+        {
+            AddItem(name);
+        }
+        else if (option.equals("2"))
+        {
+            RemoveItem(name);
+        }
+        else
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static void RemoveItem(String name){
+        System.out.println("Which item should be removed?");
+        String item = GetCurrentOption();
+        listOfLists.get(name).remove(item);
+        System.out.println("\nRemoved " + item + " from " + name + ".");
+    }
+
+    private static void AddList(){
+        System.out.print("\nWhat is the list name? ");
+        String name = scan.nextLine();
+        if (listOfLists.containsKey(name)){
+            System.out.println("List already exists");
+            return;
+        }
+        listOfLists.put(name, new ArrayList&ltString>());
+        boolean done = false;
+        while (!done)
+        {
+            DisplayCurrentList(name);
+            m.addMenu.DisplayMenu(m.addMenu.GetMenu());
+            String option = GetCurrentOption();
+            done = RunAddMenu(name, option);
+        }
+    }
+
+    private static void DisplayCurrentList(String name){
+        System.out.println("\nCurrent contents of " + name + ":");
+        int count = 1;
+        for (String string : listOfLists.get(name)){
+            System.out.println(count + ". " + string);
+            count++;
+        }
+    }
+
+    private static boolean RunAddMenu(String name, String option){
+        if (option.equals("1"))
+        {
+            AddItem(name);
+        }
+        else if (option.equals("2"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static void AddItem(String name){
+        System.out.print("\nWhat do you want to add to " + name + "?");
+        String item = scan.nextLine();
+        listOfLists.get(name).add(item);
+    }
+}
+
+                </code>
+            </pre>
+        </div>
+        <div id="b2" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>MainMenu.java</h2>
+            <pre>
+                <code>
+public class MainMenu {
+    private String[] menu = {"\n", "Main Menu", "--------------", "1. Add List", "2. View List", "3. Delete List", "4. Quit/Save"};
+
+    public MainMenu(){
+
+    }
+
+    public void DisplayMenu(String[] menu){
+        for (String string : menu) {
+            System.out.println(string);
+        }
+    }
+
+    public String[] GetMenu(){
+        return menu;
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b3" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>ViewMenu.java</h2>
+            <pre>
+                <code>
+public class ViewMenu extends MainMenu{
+    private String[] menu = {"\n","List Options", "--------------", "1. Add Item", "2. Remove Item", "3. Quit"};
+
+    public ViewMenu(){
+
+    }
+
+    public String[] GetMenu(){
+        return menu;
+    }
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b4" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>AddMenu.java</h2>
+            <pre>
+                <code>
+public class AddMenu extends MainMenu{
+    private String[] menu = {"\n","Add List Menu", "--------------", "1. Add Item", "2. Quit"};
+
+    public AddMenu(){
+
+    }
+
+    public String[] GetMenu(){
+        return menu;
+    }
+
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b5" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>main.cpp</h2>
+            <pre>
+                <code>
+#include "json.hpp"
+#include &ltfstream>
+#include &ltunordered_map>
+#include "Menu.h"
+
+using namespace nlohmann;
+
+//unordered_map< string, vector&ltstring>> listOfLists;?
+string getFilename();
+
+void getListFromFile(const string &filename);
+
+string getCurrentOption();
+
+bool runMainMenu(const string &option);
+
+void saveListToFile(const string &filename);
+
+void deleteList();
+
+void viewList();
+
+bool runViewMenu(const string &name, const string &option);
+
+void removeItem(const string &name);
+
+void displayListOfLists();
+
+void addList();
+
+void displayCurrentList(const string &name);
+
+bool runAddMenu(const string &name, const string &option);
+
+void addItem(const string &name);
+
+json listOfLists;
+Menu mainMenu = *new Menu(vector&ltstring>(
+      {"\n", "Main Menu", "--------------", "1. Add List", "2. View List", "3. Delete List", "4. Quit/Save"}));
+Menu addMenu = *new Menu(vector&ltstring>({"\n", "Add List Menu", "--------------", "1. Add Item", "2. Quit"}));
+Menu viewMenu = *new Menu(
+      vector&ltstring>({"\n", "List Options", "--------------", "1. Add Item", "2. Remove Item", "3. Quit"}));
+
+int main()
+{
+   bool done = false;
+   getListFromFile(getFilename());
+//    cout << listOfLists << endl;
+   while (!done)
+   {
+      mainMenu.DisplayMenu();
+      string option = getCurrentOption();
+      done = runMainMenu(option);
+   }
+   saveListToFile(getFilename());
+   return 0;
+}
+
+void saveListToFile(const string &filename)
+{
+   try
+   {
+      ofstream file(filename, ios_base::out);
+      file << setw(4) << listOfLists << endl;
+      file.close();
+   }
+   catch (...)
+   {
+      cout << "Error occurred in uploading lists to file: " << filename << ".";
+   }
+}
+
+string getFilename()
+{
+   string filename;
+   cout << "What file do you want to open from/save to?" << endl;
+   cin >> filename;
+   return filename;
+}
+
+void getListFromFile(const string &filename)
+{
+   try
+   {
+      ifstream file(filename);
+      listOfLists = json::parse(file);
+      file.close();
+   }
+   catch (...)
+   {
+      cout << "File doesn't exist working from blank." << endl;
+   }
+}
+
+string getCurrentOption()
+{
+   bool done = false;
+   string option;
+   while (!done)
+   {
+      cout << "\nWhat is your choice?" << endl;
+      getline(cin, option);
+      if (option != "")
+      {
+         done = true;
+      }
+      else
+      {
+         cout << "Not a valid option";
+      }
+   }
+   return option;
+}
+
+bool runMainMenu(const string &option)
+{
+   if (option == "1")
+   {
+      addList();
+   }
+   else if (option == "2")
+   {
+      viewList();
+   }
+   else if (option == "3")
+   {
+      deleteList();
+   }
+   else if (option == "4")
+   {
+      return true;
+   }
+   return false;
+}
+
+void deleteList()
+{
+   displayListOfLists();
+   string option;
+   cout << "Which list should be deleted?" << endl;
+   cin >> option;
+   cout << "Are you sure you want to delete the list? (y/n) ";
+   string check;
+   cin >> check;
+   if (check == "y")
+   {
+      listOfLists.erase(option);
+   }
+}
+
+void displayListOfLists()
+{
+   cout << "\nList of Lists:" << endl;
+   int count = 1;
+   for (auto &it: listOfLists.items())
+   {
+      cout << count << ". " << it.key() << endl;
+      count++;
+   }
+}
+
+void viewList()
+{
+   displayListOfLists();
+   int quitSpot = listOfLists.size() + 1;
+   cout << quitSpot << ". quit" << endl;
+   bool validOption = false;
+   string name = getCurrentOption();
+   bool firstRun = true;
+   while (!validOption)
+   {
+      if (!firstRun)
+      {
+         name = getCurrentOption();
+      }
+      if (listOfLists.contains(name))
+      {
+         displayCurrentList(name);
+         validOption = true;
+      }
+      else if (name == "quit")
+      {
+         return;
+      }
+      else
+      {
+         cout << "\nInvalid Option.\n";
+      }
+      firstRun = false;
+   }
+   firstRun = true;
+   bool done = false;
+   while (!done)
+   {
+      if (!firstRun)
+      {
+         displayCurrentList(name);
+      }
+      else
+      {
+         firstRun = false;
+      }
+      viewMenu.DisplayMenu();
+      string option = getCurrentOption();
+      done = runViewMenu(name, option);
+   }
+}
+
+bool runViewMenu(const string &name, const string &option)
+{
+   if (option == "1")
+   {
+      addItem(name);
+   }
+   else if (option == "2")
+   {
+      removeItem(name);
+   }
+   else
+   {
+      return true;
+   }
+   return false;
+}
+
+void removeItem(const string &name)
+{
+   cout << "What item should be removed?";
+   string item = getCurrentOption();
+   for (auto i = 0; i < listOfLists[name].size(); i++)
+   {
+      if (listOfLists[name][i] == item)
+      {
+         listOfLists[name].erase(i);
+      }
+   }
+}
+
+void addList()
+{
+   cout << "\nWhat is the list name?" << endl;
+   string name;
+   getline(cin, name);
+   if (listOfLists.contains(name))
+   {
+      cout << "List already exists.";
+      return;
+   }
+   listOfLists[name] = {};
+   bool done = false;
+   while (!done)
+   {
+      displayCurrentList(name);
+      addMenu.DisplayMenu();
+      string option = getCurrentOption();
+      done = runAddMenu(name, option);
+   }
+}
+
+void displayCurrentList(const string &name)
+{
+   cout << "\nCurrent contents of " << name << ":" << endl;
+   int count = 1;
+   for (string item: listOfLists.at(name))
+   {
+      cout << count << ". " << item << endl;
+      count++;
+   }
+}
+
+bool runAddMenu(const string &name, const string &option)
+{
+   if (option == "1")
+   {
+      addItem(name);
+   }
+   else if (option == "2")
+   {
+      return true;
+   }
+   return false;
+}
+
+void addItem(const string &name)
+{
+   cout << "What would you like to add to " << name << "?" << endl;
+   string item = getCurrentOption();
+   listOfLists[name].emplace_back(item);
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b6" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Menu.h</h2>
+            <pre>
+                <code>
+//
+// Created by bradl on 11/1/2022.
+//
+#include &ltiostream>
+#include &ltvector>
+
+#ifndef LISTOFLISTSCPP_MENU_H
+#define LISTOFLISTSCPP_MENU_H
+
+using namespace std;
+
+class Menu
+{
+protected:
+   vector&ltstring> menu;
+
+public:
+   Menu(vector&ltstring>);
+
+   void DisplayMenu();
+};
+
+
+#endif //LISTOFLISTSCPP_MENU_H
+
+                </code>
+            </pre>
+        </div>
+        <div id="b7" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>Menu.cpp</h2>
+            <pre>
+                <code>
+//
+// Created by bradl on 11/1/2022.
+//
+
+#include "Menu.h"
+
+Menu::Menu(vector&ltstring> newMenu)
+{
+   menu = newMenu;
+}
+
+void Menu::DisplayMenu()
+{
+   for (const auto &item: menu)
+      cout << item << endl;
+}
+                </code>
+            </pre>
+        </div>
+        <div id="b8" class="containerTab">
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+            <h2>AddMenu.java</h2>
+            <p>
+                I did not create this file and as such I am providing the link to the GitHub repository
+                <a href="https://github.com/nlohmann/json">here.</a>
+            </p>
+        </div>
+    </main>
+    <footer>
+        <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
+        <h3><a href="site-plan.html">Site Plan</a></h3>
+        <div class="social">
+            <a href="https://facebook.com" target="_blank">
+                <img src="images/facebook.png" alt="fb icon">
+            </a>
+            <a href="https://twitter.com" target="_blank">
+                <img src="images/twitter.png" alt="twitter icon">
+            </a>
+            <a href="https://instagram.com" target="_blank">
+                <img src="images/instagram.png" alt="instagram icon">
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
