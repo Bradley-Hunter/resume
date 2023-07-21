@@ -29,47 +29,47 @@
 <!-- Using code from https://www.w3schools.com/howto/howto_js_expanding_grid.asp to create the needed design -->
 
 <body>
-    <header>
-        <a id="logo_link" href="index.html">
-            <img class="logo" src="images/my_picture.jpg" alt="My picture">
-        </a>
-        <nav>
-            <a href="index.html">Home/Resume</a>
-            <a href="python.html">Python Projects</a>
-            <a href="csharp.html">C# Projects</a>
-            <a href="listOfLists.html">List of Lists Project</a>
-            <a href="site-plan.html">Site Plan</a>
-        </nav>
-    </header>
-    <main class="projects">
-        <h1>Cycle Game</h1>
-        <p>The cycle game is a game coded in C# that I created in my CSE 210 Programming with Classes class while
-            attending Brigham Young University-Idaho.</p>
-        <h2>Files</h2>
-        <div class="row">
-            <div class="column" onclick="openTab('b1');">Program.cs</div>
-            <div class="column" onclick="openTab('b2');">Constants.cs</div>
-            <div class="column" onclick="openTab('b3');">Director.cs</div>
-            <div class="column" onclick="openTab('b4');">Cast.cs</div>
-            <div class="column" onclick="openTab('b5');">Actor.cs</div>
-            <div class="column" onclick="openTab('b6');">Cycle.cs</div>
-            <div class="column" onclick="openTab('b7');">Color.cs</div>
-            <div class="column" onclick="openTab('b8');">Point.cs</div>
-            <div class="column" onclick="openTab('b9');">Action.cs</div>
-            <div class="column" onclick="openTab('b10');">ControlActorsAction.cs</div>
-            <div class="column" onclick="openTab('b11');">DrawActorsAction.cs</div>
-            <div class="column" onclick="openTab('b12');">HandleCollisionsAction.cs</div>
-            <div class="column" onclick="openTab('b13');">MoveActorsAction.cs</div>
-            <div class="column" onclick="openTab('b14');">Script.cs</div>
-            <div class="column" onclick="openTab('b15');">KeyboardService.cs</div>
-            <div class="column" onclick="openTab('b16');">VideoService.cs</div>
-        </div>
+<header>
+    <a id="logo_link" href="index.html">
+        <img class="logo" src="images/my_picture.jpg" alt="My picture">
+    </a>
+    <nav>
+        <a href="index.html">Home/Resume</a>
+        <a href="python.html">Python Projects</a>
+        <a href="csharp.html">C# Projects</a>
+        <a href="listOfLists.html">List of Lists Project</a>
+        <a href="site-plan.html">Site Plan</a>
+    </nav>
+</header>
+<main class="projects">
+    <h1>Cycle Game</h1>
+    <p>The cycle game is a game coded in C# that I created in my CSE 210 Programming with Classes class while
+        attending Brigham Young University-Idaho.</p>
+    <h2>Files</h2>
+    <div class="row">
+        <div class="column" onclick="openTab('b1');">Program.cs</div>
+        <div class="column" onclick="openTab('b2');">Constants.cs</div>
+        <div class="column" onclick="openTab('b3');">Director.cs</div>
+        <div class="column" onclick="openTab('b4');">Cast.cs</div>
+        <div class="column" onclick="openTab('b5');">Actor.cs</div>
+        <div class="column" onclick="openTab('b6');">Cycle.cs</div>
+        <div class="column" onclick="openTab('b7');">Color.cs</div>
+        <div class="column" onclick="openTab('b8');">Point.cs</div>
+        <div class="column" onclick="openTab('b9');">Action.cs</div>
+        <div class="column" onclick="openTab('b10');">ControlActorsAction.cs</div>
+        <div class="column" onclick="openTab('b11');">DrawActorsAction.cs</div>
+        <div class="column" onclick="openTab('b12');">HandleCollisionsAction.cs</div>
+        <div class="column" onclick="openTab('b13');">MoveActorsAction.cs</div>
+        <div class="column" onclick="openTab('b14');">Script.cs</div>
+        <div class="column" onclick="openTab('b15');">KeyboardService.cs</div>
+        <div class="column" onclick="openTab('b16');">VideoService.cs</div>
+    </div>
 
-        <!-- The expanding grid (hidden by default) -->
-        <div id="b1" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Program.cs</h2>
-            <pre>
+    <!-- The expanding grid (hidden by default) -->
+    <div id="b1" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Program.cs</h2>
+        <pre>
                 <code>
 using Unit05.Game;
 using Unit05.Game.Casting;
@@ -90,7 +90,7 @@ namespace Unit05
         /// Starts the program using the given arguments.
         /// </summary>
         /// <param name="args">The given arguments.</param>
-        static void Main(string[] args)
+                    static void Main(string[] args)
         {
             // create the cast
             Cast cast = new Cast();
@@ -118,12 +118,12 @@ namespace Unit05
 }
                 </code>
             </pre>
-        </div>
+    </div>
 
-        <div id="b2" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Constants.cs</h2>
-            <pre>
+    <div id="b2" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Constants.cs</h2>
+        <pre>
                 <code>
 using System;
 using Microsoft.VisualBasic;
@@ -159,12 +159,12 @@ namespace Unit05.Game
 }
                 </code>
             </pre>
-        </div>
+    </div>
 
-        <div id="b3" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Director.cs</h2>
-            <pre>
+    <div id="b3" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Director.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 using Unit05.Game.Casting;
@@ -188,7 +188,7 @@ namespace Unit05.Game.Directing
         /// Constructs a new instance of Director using the given KeyboardService and VideoService.
         /// </summary>
         /// <param name="videoService">The given VideoService.</param>
-        public Director(VideoService videoService)
+                    public Director(VideoService videoService)
         {
             this.videoService = videoService;
         }
@@ -197,8 +197,8 @@ namespace Unit05.Game.Directing
         /// Starts the game by running the main game loop for the given cast and script.
         /// </summary>
         /// <param name="cast">The given cast.</param>
-        /// <param name="script">The given script.</param>
-        public void StartGame(Cast cast, Script script)
+                    /// <param name="script">The given script.</param>
+                    public void StartGame(Cast cast, Script script)
         {
             videoService.OpenWindow();
             while (videoService.IsWindowOpen())
@@ -214,9 +214,9 @@ namespace Unit05.Game.Directing
         /// Calls execute for each action in the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="cast">The cast of actors.</param>
-        /// <param name="script">The script of actions.</param>
-        private void ExecuteActions(string group, Cast cast, Script script)
+                    /// <param name="cast">The cast of actors.</param>
+                    /// <param name="script">The script of actions.</param>
+                    private void ExecuteActions(string group, Cast cast, Script script)
         {
             List<Action> actions = script.GetActions(group);
             foreach(Action action in actions)
@@ -228,11 +228,11 @@ namespace Unit05.Game.Directing
 }
                 </code>
             </pre>
-        </div>
-        <div id="b4" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Cast.cs</h2>
-            <pre>
+    </div>
+    <div id="b4" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Cast.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 
@@ -260,8 +260,8 @@ namespace Unit05.Game.Casting
         /// Adds the given actor to the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="actor">The actor to add.</param>
-        public void AddActor(string group, Actor actor)
+                    /// <param name="actor">The actor to add.</param>
+                    public void AddActor(string group, Actor actor)
         {
             if (!actors.ContainsKey(group))
             {
@@ -278,7 +278,7 @@ namespace Unit05.Game.Casting
         /// Gets the actors in the given group. Returns an empty list if there aren't any.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <returns>The list of actors.</returns>
+                        /// <returns>The list of actors.</returns>
         public List<Actor> GetActors(string group)
         {
             List<Actor> results = new List<Actor>();
@@ -307,7 +307,7 @@ namespace Unit05.Game.Casting
         /// Gets the first actor in the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <returns>The first actor.</returns>
+                                            /// <returns>The first actor.</returns>
         public Actor GetFirstActor(string group)
         {
             Actor result = null;
@@ -337,8 +337,8 @@ namespace Unit05.Game.Casting
         /// Removes the given actor from the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="actor">The actor to remove.</param>
-        public void RemoveActor(string group, Actor actor)
+                                            /// <param name="actor">The actor to remove.</param>
+                                            public void RemoveActor(string group, Actor actor)
         {
             if (actors.ContainsKey(group))
             {
@@ -350,11 +350,11 @@ namespace Unit05.Game.Casting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b5" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Actor.cs</h2>
-            <pre>
+    </div>
+    <div id="b5" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Actor.cs</h2>
+        <pre>
                 <code>
 using System;
 
@@ -443,7 +443,7 @@ namespace Unit05.Game.Casting
         /// Sets the actor's color to the given value.
         /// </summary>
         /// <param name="color">The given color.</param>
-        /// <exception cref="ArgumentException">When color is null.</exception>
+                    /// <exception cref="ArgumentException">When color is null.</exception>
         public void SetColor(Color color)
         {
             if (color == null)
@@ -457,7 +457,7 @@ namespace Unit05.Game.Casting
         /// Sets the actor's font size to the given value.
         /// </summary>
         /// <param name="fontSize">The given font size.</param>
-        /// <exception cref="ArgumentException">
+                    /// <exception cref="ArgumentException">
         /// When font size is less than or equal to zero.
         /// </exception>
         public void SetFontSize(int fontSize)
@@ -473,7 +473,7 @@ namespace Unit05.Game.Casting
         /// Sets the actor's position to the given value.
         /// </summary>
         /// <param name="position">The given position.</param>
-        /// <exception cref="ArgumentException">When position is null.</exception>
+                    /// <exception cref="ArgumentException">When position is null.</exception>
         public void SetPosition(Point position)
         {
             if (position == null)
@@ -487,7 +487,7 @@ namespace Unit05.Game.Casting
         /// Sets the actor's text to the given value.
         /// </summary>
         /// <param name="text">The given text.</param>
-        /// <exception cref="ArgumentException">When text is null.</exception>
+                    /// <exception cref="ArgumentException">When text is null.</exception>
         public void SetText(string text)
         {
             if (text == null)
@@ -501,7 +501,7 @@ namespace Unit05.Game.Casting
         /// Sets the actor's velocity to the given value.
         /// </summary>
         /// <param name="velocity">The given velocity.</param>
-        /// <exception cref="ArgumentException">When velocity is null.</exception>
+                    /// <exception cref="ArgumentException">When velocity is null.</exception>
         public void SetVelocity(Point velocity)
         {
             if (velocity == null)
@@ -515,11 +515,11 @@ namespace Unit05.Game.Casting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b6" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Cycle.cs</h2>
-            <pre>
+    </div>
+    <div id="b6" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Cycle.cs</h2>
+        <pre>
                 <code>
 using System;
 using System.Collections.Generic;
@@ -577,7 +577,7 @@ namespace Unit05.Game.Casting
         /// Grows the cycle's tail by the given number of segments.
         /// </summary>
         /// <param name="numberOfSegments">The number of segments to grow.</param>
-        public void GrowTail(int numberOfSegments)
+                                public void GrowTail(int numberOfSegments)
         {
             for (int i = 0; i < numberOfSegments; i++)
             {
@@ -616,7 +616,7 @@ namespace Unit05.Game.Casting
         /// Turns the head of the cycle in the given direction.
         /// </summary>
         /// <param name="velocity">The given direction.</param>
-        public void TurnHead(Point direction)
+                                    public void TurnHead(Point direction)
         {
             segments[0].SetVelocity(direction);
         }
@@ -648,11 +648,11 @@ namespace Unit05.Game.Casting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b7" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Color.cs</h2>
-            <pre>
+    </div>
+    <div id="b7" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Color.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 
@@ -675,9 +675,9 @@ namespace Unit05.Game.Casting
         /// Constructs a new instance of Color using the given red, green and blue values.
         /// </summary>
         /// <param name="red">The given red value (0-255).</param>
-        /// <param name="green">The given green value (0-255).</param>
-        /// <param name="blue">The given blue value (0-255).</param>
-        public Color(int red, int green, int blue)
+                    /// <param name="green">The given green value (0-255).</param>
+                    /// <param name="blue">The given blue value (0-255).</param>
+                    public Color(int red, int green, int blue)
         {
             this.red = red;
             this.green = green;
@@ -724,11 +724,11 @@ namespace Unit05.Game.Casting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b8" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Point.cs</h2>
-            <pre>
+    </div>
+    <div id="b8" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Point.cs</h2>
+        <pre>
                 <code>
 namespace Unit05.Game.Casting
 {
@@ -748,8 +748,8 @@ namespace Unit05.Game.Casting
         /// Constructs a new instance of Point using the given x and y values.
         /// </summary>
         /// <param name="x">The given x value.</param>
-        /// <param name="y">The given y value.</param>
-        public Point(int x, int y)
+                    /// <param name="y">The given y value.</param>
+                    public Point(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -759,7 +759,7 @@ namespace Unit05.Game.Casting
         /// Adds the given point to this one by summing the x and y values.
         /// </summary>
         /// <param name="other">The point to add.</param>
-        /// <returns>The sum as a new Point.</returns>
+                    /// <returns>The sum as a new Point.</returns>
         public Point Add(Point other)
         {
             int x = this.x + other.GetX();
@@ -771,7 +771,7 @@ namespace Unit05.Game.Casting
         /// Whether or not this Point is equal to the given one.
         /// </summary>
         /// <param name="other">The point to compare.</param>
-        /// <returns>True if both x and y are equal; false if otherwise.</returns>
+                    /// <returns>True if both x and y are equal; false if otherwise.</returns>
         public bool Equals(Point other)
         {
             return this.x == other.GetX() && this.y == other.GetY();
@@ -810,7 +810,7 @@ namespace Unit05.Game.Casting
         /// Scales the point by multiplying the x and y values by the provided factor.
         /// </summary>
         /// <param name="factor">The scaling factor.</param>
-        /// <returns>A scaled instance of Point.</returns>
+                    /// <returns>A scaled instance of Point.</returns>
         public Point Scale(int factor)
         {
             int x = this.x * factor;
@@ -821,11 +821,11 @@ namespace Unit05.Game.Casting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b9" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Action.cs</h2>
-            <pre>
+    </div>
+    <div id="b9" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Action.cs</h2>
+        <pre>
                 <code>
 using Unit05.Game.Casting;
 
@@ -846,17 +846,17 @@ namespace Unit05.Game.Scripting
         /// derived classes.
         /// </summary>
         /// <param name="cast">The cast of actors.</param>
-        /// <param name="script">The script of actions.</param>
-        void Execute(Cast cast, Script script);
+                    /// <param name="script">The script of actions.</param>
+                    void Execute(Cast cast, Script script);
     }
 }
                 </code>
             </pre>
-        </div>
-        <div id="b10" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>ControlActorsAction.cs</h2>
-            <pre>
+    </div>
+    <div id="b10" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>ControlActorsAction.cs</h2>
+        <pre>
                 <code>
 using Unit05.Game.Casting;
 using Unit05.Game.Services;
@@ -946,11 +946,11 @@ namespace Unit05.Game.Scripting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b11" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>DrawActorsAction.cs</h2>
-            <pre>
+    </div>
+    <div id="b11" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>DrawActorsAction.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 using Unit05.Game.Casting;
@@ -1001,11 +1001,11 @@ namespace Unit05.Game.Scripting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b12" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>HandleCollisionsAction.cs</h2>
-            <pre>
+    </div>
+    <div id="b12" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>HandleCollisionsAction.cs</h2>
+        <pre>
                 <code>
 using System;
 using System.Collections.Generic;
@@ -1076,7 +1076,7 @@ namespace Unit05.Game.Scripting
         /// Sets the game over flag if the snake collides with one of its segments.
         /// </summary>
         /// <param name="cast">The cast of actors.</param>
-        private void HandleSegmentCollisions(Cast cast)
+                        private void HandleSegmentCollisions(Cast cast)
         {
             Cycle snake = (Cycle)cast.GetFirstActor("cycles");
             Actor head = snake.GetHead();
@@ -1154,11 +1154,11 @@ namespace Unit05.Game.Scripting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b13" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>MoveActorsAction.cs</h2>
-            <pre>
+    </div>
+    <div id="b13" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>MoveActorsAction.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 using Unit05.Game.Casting;
@@ -1208,11 +1208,11 @@ namespace Unit05.Game.Scripting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b14" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Script.cs</h2>
-            <pre>
+    </div>
+    <div id="b14" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Script.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 
@@ -1241,8 +1241,8 @@ namespace Unit05.Game.Scripting
         /// Adds the given action to the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="action">The action to add.</param>
-        public void AddAction(string group, Action action)
+                    /// <param name="action">The action to add.</param>
+                    public void AddAction(string group, Action action)
         {
             if (!actions.ContainsKey(group))
             {
@@ -1259,7 +1259,7 @@ namespace Unit05.Game.Scripting
         /// Gets the actions in the given group. Returns an empty list if there aren't any.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <returns>The list of actions.</returns>
+                        /// <returns>The list of actions.</returns>
         public List<Action> GetActions(string group)
         {
             List<Action> results = new List<Action>();
@@ -1274,8 +1274,8 @@ namespace Unit05.Game.Scripting
         /// Removes the given action from the given group.
         /// </summary>
         /// <param name="group">The group name.</param>
-        /// <param name="action">The action to remove.</param>
-        public void RemoveActor(string group, Action action)
+                                /// <param name="action">The action to remove.</param>
+                                public void RemoveActor(string group, Action action)
         {
             if (actions.ContainsKey(group))
             {
@@ -1287,11 +1287,11 @@ namespace Unit05.Game.Scripting
 }
                 </code>
             </pre>
-        </div>
-        <div id="b15" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>KeyboardService.cs</h2>
-            <pre>
+    </div>
+    <div id="b15" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>KeyboardService.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 using Raylib_cs;
@@ -1330,7 +1330,7 @@ namespace Unit05.Game.Services
         /// Checks if the given key is currently down.
         /// </summary>
         /// <param name="key">The given key (w, a, s, d, i, j, k, or l)</param>
-        /// <returns>True if the given key is down; false if otherwise.</returns>
+                    /// <returns>True if the given key is down; false if otherwise.</returns>
         public bool IsKeyDown(string key)
         {
             KeyboardKey raylibKey = keys[key.ToLower()];
@@ -1341,7 +1341,7 @@ namespace Unit05.Game.Services
         /// Checks if the given key is currently up.
         /// </summary>
         /// <param name="key">The given key (w, a, s, d, i, j, k, or l)</param>
-        /// <returns>True if the given key is up; false if otherwise.</returns>
+                    /// <returns>True if the given key is up; false if otherwise.</returns>
         public bool IsKeyUp(string key)
         {
             KeyboardKey raylibKey = keys[key.ToLower()];
@@ -1352,11 +1352,11 @@ namespace Unit05.Game.Services
 }
                 </code>
             </pre>
-        </div>
-        <div id="b16" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>VideoService.cs</h2>
-            <pre>
+    </div>
+    <div id="b16" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>VideoService.cs</h2>
+        <pre>
                 <code>
 using System.Collections.Generic;
 using System.Reflection.Metadata;
@@ -1380,7 +1380,7 @@ namespace Unit05.Game.Services
         /// Constructs a new instance of KeyboardService using the given cell size.
         /// </summary>
         /// <param name="cellSize">The cell size (in pixels).</param>
-        public VideoService(bool debug)
+                    public VideoService(bool debug)
         {
             this.debug = debug;
         }
@@ -1411,7 +1411,7 @@ namespace Unit05.Game.Services
         /// Draws the given actor's text on the screen.
         /// </summary>
         /// <param name="actor">The actor to draw.</param>
-        public void DrawActor(Actor actor)
+                    public void DrawActor(Actor actor)
         {
             string text = actor.GetText();
             int x = actor.GetPosition().GetX();
@@ -1426,7 +1426,7 @@ namespace Unit05.Game.Services
         /// Draws the given list of actors on the screen.
         /// </summary>
         /// <param name="actors">The list of actors to draw.</param>
-        public void DrawActors(List<Actor> actors)
+                    public void DrawActors(List<Actor> actors)
         {
             foreach (Actor actor in actors)
             {
@@ -1480,7 +1480,7 @@ namespace Unit05.Game.Services
         /// Converts the given color to it's Raylib equivalent.
         /// </summary>
         /// <param name="color">The color to convert.</param>
-        /// <returns>A Raylib color.</returns>
+                    /// <returns>A Raylib color.</returns>
         private Raylib_cs.Color ToRaylibColor(Casting.Color color)
         {
             int r = color.GetRed();
@@ -1494,27 +1494,27 @@ namespace Unit05.Game.Services
 }
                 </code>
             </pre>
-        </div>
-        <video controls>
-            <source src="videos/wdd130_personal_cycle.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </main>
-    <footer>
-        <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
-        <h3><a href="site-plan.html">Site Plan</a></h3>
-        <div class="social">
-            <a href="https://facebook.com" target="_blank">
-                <img src="images/facebook.png" alt="fb icon">
-            </a>
-            <a href="https://twitter.com" target="_blank">
-                <img src="images/twitter.png" alt="twitter icon">
-            </a>
-            <a href="https://instagram.com" target="_blank">
-                <img src="images/instagram.png" alt="instagram icon">
-            </a>
-        </div>
-    </footer>
+    </div>
+    <video controls>
+        <source src="videos/wdd130_personal_cycle.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</main>
+<footer>
+    <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
+    <h3><a href="site-plan.html">Site Plan</a></h3>
+    <div class="social">
+        <a href="https://facebook.com" target="_blank">
+            <img src="images/facebook.png" alt="fb icon">
+        </a>
+        <a href="https://twitter.com" target="_blank">
+            <img src="images/twitter.png" alt="twitter icon">
+        </a>
+        <a href="https://instagram.com" target="_blank">
+            <img src="images/instagram.png" alt="instagram icon">
+        </a>
+    </div>
+</footer>
 </body>
 
 </html>

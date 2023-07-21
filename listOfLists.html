@@ -22,50 +22,61 @@
                 document.getElementById(tabName).style.display = "none";
             }
         }
-    </script></head>
+    </script>
+</head>
 <body>
-    <header>
-        <a id="logo_link" href="index.html">
-            <img class="logo" src="images/my_picture.jpg" alt="My picture">
-        </a>
-        <nav>
-            <a href="index.html">Home/Resume</a>
-            <a href="python.html">Python Projects</a>
-            <a href="csharp.html">C# Projects</a>
-            <a href="listOfLists.html">List of Lists Project</a>
-            <a href="site-plan.html">Site Plan</a>
-        </nav>
-    </header>
-    <main id="listOfListsBody" class="projects">
-        <div id="java" class="listOfListsContent">
-            <h1>Java Version</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad adipisci, aliquam consequuntur cum delectus eaque earum enim eos eveniet iure magnam maiores necessitatibus nisi quae quaerat sapiente tenetur ullam.</p>
-            <h2>Files</h2>
-            <div class="row">
-                <div class="column" onclick="openTab('b1');">Main.java</div>
-                <div class="column" onclick="openTab('b2');">MainMenu.java</div>
-                <div class="column" onclick="openTab('b3');">ViewMenu.java</div>
-                <div class="column" onclick="openTab('b4');">AddMenu.java</div>
-            </div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/0oIDNygpOJM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<header>
+    <a id="logo_link" href="index.html">
+        <img class="logo" src="images/my_picture.jpg" alt="My picture">
+    </a>
+    <nav>
+        <a href="index.html">Home/Resume</a>
+        <a href="python.html">Python Projects</a>
+        <a href="csharp.html">C# Projects</a>
+        <a href="listOfLists.html">List of Lists Project</a>
+        <a href="site-plan.html">Site Plan</a>
+    </nav>
+</header>
+<main id="listOfListsBody" class="projects">
+    <div id="java" class="listOfListsContent">
+        <h1>Java Version</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad adipisci, aliquam consequuntur cum delectus
+            eaque earum enim eos eveniet iure magnam maiores necessitatibus nisi quae quaerat sapiente tenetur
+            ullam.</p>
+        <h2>Files</h2>
+        <div class="row">
+            <div class="column" onclick="openTab('b1');">Main.java</div>
+            <div class="column" onclick="openTab('b2');">MainMenu.java</div>
+            <div class="column" onclick="openTab('b3');">ViewMenu.java</div>
+            <div class="column" onclick="openTab('b4');">AddMenu.java</div>
         </div>
-        <div id="cpp" class="listOfListsContent">
-            <h1>C++ Version</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aut soluta vero? Alias animi dolorem, dolores maxime nam nesciunt sint! Earum eveniet placeat praesentium rem saepe totam. Beatae, iusto, quod!</p>
-            <h2>Files</h2>
-            <div class="row">
-                <div class="column" onclick="openTab('b5');">main.cpp</div>
-                <div class="column" onclick="openTab('b6');">Menu.h</div>
-                <div class="column" onclick="openTab('b7');">Menu.cpp</div>
-                <div class="column" onclick="openTab('b8');">json.hpp</div>
-            </div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/NFAjAoil7KY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/0oIDNygpOJM" title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+    </div>
+    <div id="cpp" class="listOfListsContent">
+        <h1>C++ Version</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aut soluta vero? Alias animi dolorem,
+            dolores maxime nam nesciunt sint! Earum eveniet placeat praesentium rem saepe totam. Beatae, iusto,
+            quod!</p>
+        <h2>Files</h2>
+        <div class="row">
+            <div class="column" onclick="openTab('b5');">main.cpp</div>
+            <div class="column" onclick="openTab('b6');">Menu.h</div>
+            <div class="column" onclick="openTab('b7');">Menu.cpp</div>
+            <div class="column" onclick="openTab('b8');">json.hpp</div>
         </div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/NFAjAoil7KY" title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+    </div>
 
-        <div id="b1" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Main.java</h2>
-            <pre>
+    <div id="b1" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Main.java</h2>
+        <pre>
                 <code>
 import java.util.*;
 import java.io.*;
@@ -290,11 +301,11 @@ public class Main {
 
                 </code>
             </pre>
-        </div>
-        <div id="b2" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>MainMenu.java</h2>
-            <pre>
+    </div>
+    <div id="b2" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>MainMenu.java</h2>
+        <pre>
                 <code>
 public class MainMenu {
     private String[] menu = {"\n", "Main Menu", "--------------", "1. Add List", "2. View List", "3. Delete List", "4. Quit/Save"};
@@ -315,11 +326,11 @@ public class MainMenu {
 }
                 </code>
             </pre>
-        </div>
-        <div id="b3" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>ViewMenu.java</h2>
-            <pre>
+    </div>
+    <div id="b3" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>ViewMenu.java</h2>
+        <pre>
                 <code>
 public class ViewMenu extends MainMenu{
     private String[] menu = {"\n","List Options", "--------------", "1. Add Item", "2. Remove Item", "3. Quit"};
@@ -334,11 +345,11 @@ public class ViewMenu extends MainMenu{
 }
                 </code>
             </pre>
-        </div>
-        <div id="b4" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>AddMenu.java</h2>
-            <pre>
+    </div>
+    <div id="b4" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>AddMenu.java</h2>
+        <pre>
                 <code>
 public class AddMenu extends MainMenu{
     private String[] menu = {"\n","Add List Menu", "--------------", "1. Add Item", "2. Quit"};
@@ -354,11 +365,11 @@ public class AddMenu extends MainMenu{
 }
                 </code>
             </pre>
-        </div>
-        <div id="b5" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>main.cpp</h2>
-            <pre>
+    </div>
+    <div id="b5" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>main.cpp</h2>
+        <pre>
                 <code>
 #include "json.hpp"
 #include &ltfstream>
@@ -651,11 +662,11 @@ void addItem(const string &name)
 }
                 </code>
             </pre>
-        </div>
-        <div id="b6" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Menu.h</h2>
-            <pre>
+    </div>
+    <div id="b6" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Menu.h</h2>
+        <pre>
                 <code>
 //
 // Created by bradl on 11/1/2022.
@@ -684,11 +695,11 @@ public:
 
                 </code>
             </pre>
-        </div>
-        <div id="b7" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>Menu.cpp</h2>
-            <pre>
+    </div>
+    <div id="b7" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>Menu.cpp</h2>
+        <pre>
                 <code>
 //
 // Created by bradl on 11/1/2022.
@@ -708,30 +719,30 @@ void Menu::DisplayMenu()
 }
                 </code>
             </pre>
-        </div>
-        <div id="b8" class="containerTab">
-            <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-            <h2>AddMenu.java</h2>
-            <p>
-                I did not create this file and as such I am providing the link to the GitHub repository
-                <a href="https://github.com/nlohmann/json">here.</a>
-            </p>
-        </div>
-    </main>
-    <footer>
-        <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
-        <h3><a href="site-plan.html">Site Plan</a></h3>
-        <div class="social">
-            <a href="https://facebook.com" target="_blank">
-                <img src="images/facebook.png" alt="fb icon">
-            </a>
-            <a href="https://twitter.com" target="_blank">
-                <img src="images/twitter.png" alt="twitter icon">
-            </a>
-            <a href="https://instagram.com" target="_blank">
-                <img src="images/instagram.png" alt="instagram icon">
-            </a>
-        </div>
-    </footer>
+    </div>
+    <div id="b8" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>AddMenu.java</h2>
+        <p>
+            I did not create this file and as such I am providing the link to the GitHub repository
+            <a href="https://github.com/nlohmann/json">here.</a>
+        </p>
+    </div>
+</main>
+<footer>
+    <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
+    <h3><a href="site-plan.html">Site Plan</a></h3>
+    <div class="social">
+        <a href="https://facebook.com" target="_blank">
+            <img src="images/facebook.png" alt="fb icon">
+        </a>
+        <a href="https://twitter.com" target="_blank">
+            <img src="images/twitter.png" alt="twitter icon">
+        </a>
+        <a href="https://instagram.com" target="_blank">
+            <img src="images/instagram.png" alt="instagram icon">
+        </a>
+    </div>
+</footer>
 </body>
 </html>
