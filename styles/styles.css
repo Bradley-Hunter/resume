@@ -82,6 +82,16 @@ body {
     border-radius: 25px;
 }
 
+#listOfListsIntro {
+    grid-column: 1 /7;
+    text-align: center;
+}
+
+#listOfListsIntro p {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
 .listOfListsContent {
     max-width: var(--width);
 }
