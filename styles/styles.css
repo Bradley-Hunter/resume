@@ -9,8 +9,12 @@ body {
     margin: 0;
 }
 
+.projects h1 {
+    text-align: center;
+}
+
 #listOfListsBody {
-    margin: 0 1%;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     /*margin: auto;*/
@@ -63,12 +67,13 @@ body {
 
 #listOfListsBody .rust-row {
     margin: 0;
-    padding-bottom: 3px;
+    display: grid;
 }
 
 #placeholder {
     background-color: white !important;
-    padding: 23px !important;
+    color: white !important;
+    height: 19px;
 }
 
 #listOfListsBody .rust-row .rust-column {
@@ -284,7 +289,7 @@ code {
 .projects {
     margin: 0 auto;
     /* align-self: center; */
-    max-width: 2000px;
+    max-width: 1000px;
 }
 
 .run-img {
