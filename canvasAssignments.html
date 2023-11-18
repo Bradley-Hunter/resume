@@ -121,7 +121,7 @@ async fn retrieve_wrapped() -> Result<String, Box<dyn std::error::Error>> {
     let current_course_names = ["Fall", "Discrete Mathematics"];
     let mut current_courses: HashMap<String, HashMap<String, String>> = HashMap::new();
 
-    let api_key = "10706~Dd5CL4fRY9WjR9tUSjtIwlppa1AuTyWVQK7rakT76Bl64Qgc8V4CTpjRsZUrXCsy";
+    let api_key = "api-key";
 
 
     let courses = get_courses(api_key).await?;
