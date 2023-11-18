@@ -13,7 +13,7 @@
             // console.log(getComputedStyle(document.getElementById(tabName)).display);
 
             if (getComputedStyle(document.getElementById(tabName)).display === "none") {
-                var i, x;
+                let i, x;
                 x = document.getElementsByClassName("containerTab");
                 for (i = 0; i < x.length; i++) {
                     x[i].style.display = "none";
@@ -26,6 +26,16 @@
     </script>
 </head>
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KEPRDN46PG"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-KEPRDN46PG');
+</script>
+
 <!-- Using code from https://www.w3schools.com/howto/howto_js_expanding_grid.asp to create the needed design -->
 
 <body>
@@ -37,8 +47,8 @@
         <a href="index.html">Home/Resume</a>
         <a href="python.html">Python Projects</a>
         <a href="csharp.html">C# Projects</a>
-        <a href="listOfLists.html">List of Lists Project</a>
-        <a href="site-plan.html">Site Plan</a>
+        <a href="listOfLists.html">List of Lists Projects</a>
+        <a href="canvasAssignments.html">Rust Desktop App</a>
     </nav>
 </header>
 <main class="projects">

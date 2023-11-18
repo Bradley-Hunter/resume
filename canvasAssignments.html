@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>Apollo 11 Lunar Lander Simulator</title>
+    <script>
+        function openTab(tabName) {
+            // console.log(document.getElementById(tabName).style.display);
+            // console.log(getComputedStyle(document.getElementById(tabName)).display);
+
+            if (getComputedStyle(document.getElementById(tabName)).display === "none") {
+                let i, x;
+                x = document.getElementsByClassName("containerTab");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                document.getElementById(tabName).style.display = "block";
+            } else {
+                document.getElementById(tabName).style.display = "none";
+            }
+        }
+    </script>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KEPRDN46PG"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-KEPRDN46PG');
+</script>
+
+<!-- Using code from https://www.w3schools.com/howto/howto_js_expanding_grid.asp to create the needed design -->
+<body>
+
+<header>
+    <a id="logo_link" href="index.html">
+        <img class="logo" src="images/my_picture.jpg" alt="My picture">
+    </a>
+    <nav>
+        <a href="index.html">Home/Resume</a>
+        <a href="python.html">Python Projects</a>
+        <a href="csharp.html">C# Projects</a>
+        <a href="listOfLists.html">List of Lists Projects</a>
+        <a href="canvasAssignments.html">Rust Desktop App</a>
+    </nav>
+</header>
+
+<main class="projects">
+    <h1>Canvas LMS API Access With Rust With A GUI</h1>
+    <p>This is a program that I developed to be able to view the assignments that I have for my classes without having to log-in into the official website. I used the following languages to develop this app: Rust, JavaScript, CSS, HTML5. I used the <i>tauri</i> crate for compiling the code into a desktop application. The <i>tokio</i> crate and the <i>reqwest</i> crate were used to have an async functionality and to access the API respectfully; and then the <i>serde</i> was used to deserialize the results from the API and convert them to a form that Rust could use. Finally, the <i>chrono</i> crate was used to manage the dates. The reason JavaScript, HTML5, and CSS were used is because the <i>tauri</i> crate uses them for the frontend of the website while allowing for Rust to be used for the backend.</p>
+    <h2>Files</h2>
+    <div class="row">
+        <div class="column" onclick="openTab('b1');">main.rs</div>
+        <div class="column" onclick="openTab('b2');">index.html</div>
+        <div class="column" onclick="openTab('b3');">main.js</div>
+        <div class="column" onclick="openTab('b4');">style.css</div>
+    </div>
+
+    <!-- The expanding grid (hidden by default) -->
+    <div id="b1" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>main.rs</h2>
+        <pre>
+                <code>
+// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use std::collections::HashMap;
+use reqwest::header::AUTHORIZATION;
+use serde::Deserialize;
+use chrono::DateTime;
+
+#[derive(Deserialize, Debug)]
+struct Course {
+    id: u32,
+    name: String,
+    original_name: Option<String>,
+    // workflow_state: String,
+    // start_at: Option<String>,
+    // end_at: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct Assignment {
+    name: String,
+    due_at: Option<String>,
+}
+
+async fn get_courses(api_key: &str) -> Result<Vec<Course>, reqwest::Error> {
+    let client = reqwest::Client::new();
+    let res = client.get("https://byui.instructure.com/api/v1/courses")
+        .header(AUTHORIZATION, format!("Bearer {}", api_key))
+        .query(&[("per_page", "100")]) // Add these lines
+        .send()
+        .await?
+        .json::<Vec<Course>>()
+        .await?;
+    Ok(res)
+}
+
+async fn get_assignments(api_key: &str, course_id: u32, page: u32) -> Result<Vec<Assignment>, reqwest::Error> {
+    let client = reqwest::Client::new();
+    let res = client.get(format!("https://byui.instructure.com/api/v1/courses/{}/assignments", course_id))
+        .header(AUTHORIZATION, format!("Bearer {}", api_key))
+        .query(&[("per_page", "10000"), ("page", &page.to_string())]) // Add these lines
+        .send()
+        .await?
+        .json::<Vec<Assignment>>()
+        .await?;
+    Ok(res)
+}
+
+#[tokio::main]
+async fn retrieve_wrapped() -> Result<String, Box<dyn std::error::Error>> {
+    let current_course_names = ["Fall", "Discrete Mathematics"];
+    let mut current_courses: HashMap<String, HashMap<String, String>> = HashMap::new();
+
+    let api_key = "10706~Dd5CL4fRY9WjR9tUSjtIwlppa1AuTyWVQK7rakT76Bl64Qgc8V4CTpjRsZUrXCsy";
+
+
+    let courses = get_courses(api_key).await?;
+    // println!("{:?}", courses);
+    let today = chrono::Utc::now();
+    for course in courses {
+        if current_course_names.contains(&course.name.as_str()) {
+            current_courses.insert(course.original_name.clone().unwrap_or(course.name.clone()), HashMap::new());
+            // println!("{:?}", course.original_name.clone().unwrap_or(course.name.clone()));
+            for page in 1.. {
+                let assignments = get_assignments(api_key, course.id, page).await?;
+                if assignments.is_empty() {
+                    break;
+                }
+                let mut input: HashMap<String, String> = HashMap::new();
+                for assignment in assignments {
+                    // let submission = get_submission(api_key, course.id, assignment.id).await?;
+                    let offset = chrono::Duration::hours(7);
+                    let due_date = DateTime::parse_from_rfc3339(&assignment.due_at.unwrap_or("0000-00-00T17:00:00Z"
+                                                    .to_string()))?.checked_sub_signed(offset).unwrap();
+                    if today < due_date {
+                        input.insert(assignment.name.clone(), due_date.clone().to_rfc2822().to_string());
+                        // println!("      {:<45} - Due date: {:?}", assignment.name, due_date.to_rfc2822().to_string());
+                    }
+                }
+                current_courses.insert(course.original_name.clone().unwrap_or(course.name.clone()),
+                                                    current_courses.get(&course.original_name.clone()
+                                                    .unwrap_or(course.name.clone())).insert(&input).to_owned());
+            }
+            // println!();
+        }
+    }
+    Ok(format!("{:?}", current_courses))
+}
+
+#[tauri::command]
+fn retrieve() -> String {
+    let output = retrieve_wrapped();
+    match output {
+        Ok(_) => return output.unwrap(),
+        Err(_) => return "Unable to retrieve assignments".to_string(),
+    }
+}
+
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![retrieve])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+
+                </code>
+            </pre>
+    </div>
+
+    <div id="b2" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>index.html</h2>
+        <pre>
+                <code>
+<!doctype html>
+&lthtml lang="en">
+&lthead>
+    &ltmeta charset="UTF-8"/>
+    &ltlink rel="stylesheet" href="styles.css"/>
+    &ltmeta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    &lttitle>Tauri App&lt/title>
+    &ltscript type="module" src="/main.js" defer>&lt/script>
+    &ltstyle>
+        .logo.vanilla:hover {
+            filter: drop-shadow(0 0 2em #ffe21c);
+        }
+    &lt/style>
+&lt/head>
+
+&ltbody>
+&ltform class="row" id="content-form">
+    &ltbutton type="submit">Load&lt/button>
+&lt/form>
+&lt!---->
+&ltdiv id="content">&lt/div>
+&lt/body>
+&lt/html>
+
+                </code>
+            </pre>
+    </div>
+
+    <div id="b3" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>main.js</h2>
+        <pre>
+                <code>
+const { invoke } = window.__TAURI__.tauri;
+
+let contentMsg;
+let courses;
+let contentString = " ";
+
+async function retrieve(){
+    courses = JSON.parse(await invoke("retrieve"));
+    contentString = contentString.concat("")
+    for (let key in Object.keys(courses)) {
+        contentString = contentString.concat("&ltsection>&lth2>", Object.keys(courses)[key],"&lt/h2>");
+        for (let assignment in Object.keys(courses[Object.keys(courses)[key]])){
+            contentString = contentString.concat("&ltp>", Object.keys(courses[Object.keys(courses)[key]])[assignment],
+                    " &ltbr>&ltb>Due Around:&lt/b> &ltbr class='due-date-break'>", courses[Object.keys(courses)[key]][Object
+                    .keys(courses[Object.keys(courses)[key]])[assignment]], "&lt/p>");
+        }
+        contentString = contentString.concat("&lt/section>")
+    }
+    contentMsg.innerHTML = contentString;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  contentMsg = document.querySelector("#content");
+  document.querySelector("#content-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    retrieve().then;
+  });
+});
+
+                </code>
+            </pre>
+    </div>
+    <div id="b4" class="containerTab">
+        <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+        <h2>style.css</h2>
+        <pre>
+                <code>
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #f6f6f6;
+  background-color: #2f2f2f;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+section {
+  border-style: none solid;
+  border-color: #6f6f6f;
+}
+
+section h2, p{
+  text-align: center;
+  border-style: none none solid;
+  border-color: #6f6f6f;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+h1 {
+  text-align: center;
+}
+
+input,
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: #ffffff;
+  background-color: #0f0f0f98;
+  transition: border-color 0.25s;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: #396cd8;
+}
+button:active {
+  border-color: #396cd8;
+  background-color: #0f0f0f69;
+}
+
+input,
+button {
+  outline: none;
+}
+
+#greet-input {
+  margin-right: 5px;
+}
+                </code>
+            </pre>
+    </div>
+
+    <iframe class="youtube" width="1000" height="563" src="https://www.youtube.com/embed/NpEaa2P7qZI" title="YouTube video player"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+
+</main>
+
+<footer>
+    <h3>Portfolio/Resume &copy; 2022 - Bradley Hunter</h3>
+    <h3><a href="site-plan.html">Site Plan</a></h3>
+    <div class="social">
+        <a href="https://facebook.com" target="_blank">
+            <img src="images/facebook.png" alt="fb icon">
+        </a>
+        <a href="https://twitter.com" target="_blank">
+            <img src="images/twitter.png" alt="twitter icon">
+        </a>
+        <a href="https://instagram.com" target="_blank">
+            <img src="images/instagram.png" alt="instagram icon">
+        </a>
+    </div>
+</footer>
+</body>
+</html>
