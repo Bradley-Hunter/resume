@@ -16,15 +16,15 @@ export default function HomePage() {
           Software Engineering Student
         </p>
         <div className="flex justify-center gap-4 text-sm">
-          <a href="mailto:bradleyhunter2021@gmail.com" className="text-primary dark:text-primary-dark hover:underline">
+          <a href="mailto:bradleyhunter2021@gmail.com" className="text-cyan-300 dark:text-primary-dark hover:underline">
             bradleyhunter2021@gmail.com
           </a>
           <span className="text-gray-400">|</span>
-          <a href="https://github.com/Bradley-Hunter" target="_blank" rel="noopener noreferrer" className="text-primary dark:text-primary-dark hover:underline">
+          <a href="https://github.com/Bradley-Hunter" target="_blank" rel="noopener noreferrer" className="text-cyan-300 dark:text-primary-dark hover:underline">
             GitHub
           </a>
           <span className="text-gray-400">|</span>
-          <a href="https://www.linkedin.com/in/bradley-hunter-68ab9a218/" target="_blank" rel="noopener noreferrer" className="text-primary dark:text-primary-dark hover:underline">
+          <a href="https://www.linkedin.com/in/bradley-hunter-68ab9a218/" target="_blank" rel="noopener noreferrer" className="text-cyan-300 dark:text-primary-dark hover:underline">
             LinkedIn
           </a>
         </div>
