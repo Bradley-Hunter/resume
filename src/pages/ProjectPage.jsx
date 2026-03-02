@@ -2,10 +2,12 @@ import { useParams, Link } from 'react-router-dom'
 import projects from '../data/projects'
 import CodeBlock from '../components/CodeBlock'
 import ToolBadge from '../components/ToolBadge'
+import useDocTitle from '../hooks/useDocTitle'
 
 export default function ProjectPage() {
   const { slug } = useParams()
   const project = projects.find((p) => p.slug === slug)
+  useDocTitle(project?.title ?? 'Project Not Found')
 
   if (!project) {
     return (

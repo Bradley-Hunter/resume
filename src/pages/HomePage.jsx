@@ -3,8 +3,10 @@ import Section from '../components/Section'
 import JobEntry from '../components/JobEntry'
 import ToolBadge from '../components/ToolBadge'
 import { about, skills, employment, education } from '../data/resume'
+import useDocTitle from '../hooks/useDocTitle'
 
 export default function HomePage() {
+  useDocTitle(null)
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero */}

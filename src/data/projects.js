@@ -6,6 +6,7 @@ const projects = [
   {
     slug: 'vellum',
     title: 'Vellum Web Browser',
+    featured: true,
     description: 'A feature-rich tabbed web browser desktop application with workspace management, tiling split panes for simultaneous multi-site viewing, a built-in text editor, bookmarks with folders, searchable browsing history, and automatic session persistence, all backed by a local SQLite database.',
     tools: ['TypeScript', 'React', 'Electron', 'Vite', 'Tailwind CSS', 'Zustand', 'SQLite', 'Vitest', 'React Testing Library', 'ESLint', 'Claude Code'],
     github: 'https://github.com/Bradley-Hunter/vellum-releases',
@@ -47,6 +48,7 @@ const projects = [
   {
     slug: 'gpib',
     title: 'GPIB Hello World',
+    featured: true,
     description: 'A basic program that can find all GPIB devices connected on the bus. Program is also capable of displaying the identification for a specified device.',
     tools: ['Rust', 'visa-rs', 'NI-VISA', 'NI-488.2'],
     github: null,
