@@ -4,6 +4,15 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 export default function CodeBlock({ name, language, code }) {
   const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  function handleCopy(e) {
+    e.stopPropagation()
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   return (
     <div className="border border-gray-600 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -14,14 +23,27 @@ export default function CodeBlock({ name, language, code }) {
         <span className="font-mono text-sm font-medium text-gray-100 dark:text-gray-100">
           {name}
         </span>
-        <svg
-          className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <div className="flex items-center gap-2">
+          {open && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={handleCopy}
+              onKeyDown={(e) => e.key === 'Enter' && handleCopy(e)}
+              className="text-xs text-gray-400 hover:text-gray-200 transition-colors px-1.5 py-0.5 rounded border border-gray-500 dark:border-gray-600"
+            >
+              {copied ? 'Copied!' : 'Copy'}
+            </span>
+          )}
+          <svg
+            className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </button>
       {open && (
         <SyntaxHighlighter

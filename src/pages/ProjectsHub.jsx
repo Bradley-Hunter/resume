@@ -1,9 +1,11 @@
 import ProjectCard from '../components/ProjectCard'
 import projects from '../data/projects'
 import useDocTitle from '../hooks/useDocTitle'
+import useMetaDescription from '../hooks/useMetaDescription'
 
 export default function ProjectsHub() {
   useDocTitle('Projects')
+  useMetaDescription('Explore Bradley Hunter\'s software projects — from Vellum Web Browser to systems programming tools in Rust and C++.')
   const featured = projects.filter((p) => p.featured)
   const rest = projects.filter((p) => !p.featured)
 
@@ -11,7 +13,7 @@ export default function ProjectsHub() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold text-white dark:text-white mb-2">Projects</h1>
       <p className="text-gray-300 dark:text-gray-400 mb-10">
-        A collection of software projects spanning multiple languages and frameworks.
+        Projects I've built across systems programming, desktop apps, and web development.
       </p>
 
       {/* Featured */}

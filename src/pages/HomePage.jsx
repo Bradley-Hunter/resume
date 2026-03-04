@@ -3,10 +3,13 @@ import Section from '../components/Section'
 import JobEntry from '../components/JobEntry'
 import ToolBadge from '../components/ToolBadge'
 import { about, skills, employment, education } from '../data/resume'
+import { email, github, linkedin } from '../data/contact'
 import useDocTitle from '../hooks/useDocTitle'
+import useMetaDescription from '../hooks/useMetaDescription'
 
 export default function HomePage() {
   useDocTitle(null)
+  useMetaDescription()
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero */}
@@ -15,18 +18,18 @@ export default function HomePage() {
           Bradley Hunter
         </h1>
         <p className="text-lg text-gray-300 dark:text-gray-400 mb-6">
-          Software Engineering Student
+          Software Engineer
         </p>
         <div className="flex justify-center gap-4 text-sm">
-          <a href="mailto:bradleyhunter2021@gmail.com" className="text-cyan-300 dark:text-primary-dark hover:underline">
-            bradleyhunter2021@gmail.com
+          <a href={`mailto:${email}`} className="text-primary dark:text-primary-dark hover:underline">
+            {email}
           </a>
           <span className="text-gray-400">|</span>
-          <a href="https://github.com/Bradley-Hunter" target="_blank" rel="noopener noreferrer" className="text-cyan-300 dark:text-primary-dark hover:underline">
+          <a href={github} target="_blank" rel="noopener noreferrer" className="text-primary dark:text-primary-dark hover:underline">
             GitHub
           </a>
           <span className="text-gray-400">|</span>
-          <a href="https://www.linkedin.com/in/bradley-hunter-68ab9a218/" target="_blank" rel="noopener noreferrer" className="text-cyan-300 dark:text-primary-dark hover:underline">
+          <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-primary dark:text-primary-dark hover:underline">
             LinkedIn
           </a>
         </div>
@@ -50,6 +53,12 @@ export default function HomePage() {
             <span className="text-sm font-semibold text-white dark:text-white">Familiar: </span>
             <span className="inline-flex flex-wrap gap-1.5 ml-1">
               {skills.familiar.map((s) => <ToolBadge key={s} name={s} />)}
+            </span>
+          </div>
+          <div>
+            <span className="text-sm font-semibold text-white dark:text-white">Tools & Frameworks: </span>
+            <span className="inline-flex flex-wrap gap-1.5 ml-1">
+              {skills.tools.map((s) => <ToolBadge key={s} name={s} />)}
             </span>
           </div>
         </div>
@@ -77,15 +86,23 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Projects CTA */}
+      {/* CTAs */}
       <div className="text-center mt-12 pt-8 border-t border-gray-400 dark:border-gray-800">
         <h2 className="text-2xl font-bold text-white dark:text-white mb-4">Want to see my work?</h2>
-        <Link
-          to="/projects"
-          className="inline-block px-6 py-3 rounded-lg bg-primary dark:bg-primary-dark text-white font-medium hover:opacity-90 transition-opacity"
-        >
-          View Projects
-        </Link>
+        <div className="flex justify-center gap-4">
+          <Link
+            to="/projects"
+            className="inline-block px-6 py-3 rounded-lg bg-primary dark:bg-primary-dark text-gray-900 font-medium hover:opacity-90 transition-opacity"
+          >
+            View Projects
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-block px-6 py-3 rounded-lg border border-gray-400 dark:border-gray-700 text-gray-200 dark:text-gray-300 font-medium hover:border-primary dark:hover:border-primary-dark transition-colors"
+          >
+            Get in Touch
+          </Link>
+        </div>
       </div>
     </div>
   )

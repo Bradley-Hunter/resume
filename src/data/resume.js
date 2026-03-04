@@ -1,9 +1,9 @@
-export const about = `Motivated Software Engineering student with proficiency in various programming languages, including Rust, C++, Swift, C#, Java, Kotlin, Python, and JavaScript, along with practice in CSS and HTML. Known for adept problem-solving and a commitment to continuous improvement, exceling in navigating complex challenges and devising innovative solutions. Bringing a unique blend of adaptability and creativity to software development, and skilled in approaching challenges with a fresh perspective. Eager to contribute my technical skills and proactive approach to excellence in a collaborative and dynamic team environment within the tech industry.`
+export const about = `I'm a Software Engineering student at BYU-Idaho, graduating December 2026. Most of my work centers on systems programming and desktop development, where I tend to reach for Rust, C++, and TypeScript. My biggest project so far is Vellum, a tabbed web browser with workspace management built on Electron. Away from the keyboard I solve Rubik's cubes, read everything I can get my hands on, and play my way through metroidvanias. I like problems that reward patience and pattern recognition, whether that's debugging a tricky borrow checker issue or routing through Hallownest.`
 
 export const skills = {
   proficient: ['Rust', 'C++', 'Python'],
-  familiar: ['Java', 'JavaScript', 'TypeScript', 'HTML/CSS', 'Kotlin', 'Swift', 'C', 'batch', 'Git', 'C#', 'Markdown'],
-  other: ['Google Search'],
+  familiar: ['Java', 'JavaScript', 'TypeScript', 'HTML/CSS', 'Kotlin', 'Swift', 'C', 'batch', 'C#', 'Markdown'],
+  tools: ['Git', 'React', 'Electron', 'Tauri', 'Tailwind CSS', 'Vite', 'SQLite', 'Zustand'],
 }
 
 export const employment = [
@@ -22,11 +22,11 @@ export const employment = [
     title: 'Operations Specialist',
     company: 'CIT Electronics',
     dates: 'Feb 2024 - Nov 2024',
-    location: '',
+    location: 'American Fork, UT',
     duties: [
-      'Ensured accurate product information through thorough and accurate research on each product.',
+      'Researched and documented detailed product specifications for electronics inventory.',
       'Assisted management and coworkers in understanding technical information about electronics, such as computer components and other niche electronics.',
-      'Expanded capabilities by remaining open to being taught new things.',
+      'Quickly learned new product categories and internal tools as business needs shifted.',
     ],
   },
   {
@@ -41,22 +41,12 @@ export const employment = [
     ],
   },
   {
-    title: 'Fuel Station Attendant',
-    company: 'Walmart',
-    dates: 'Aug 2022 - Oct 2022',
-    location: '',
-    duties: [
-      'Maintained positive and professional interactions with customers, ensuring their satisfaction.',
-      'Ensured that legal acquisition of goods.',
-      'Maintained financial integrity by ensuring correct exchange of money for goods.',
-    ],
-  },
-  {
     title: 'Early Morning Custodian',
     company: 'Brigham Young University-Idaho',
     dates: 'Oct 2021 - Aug 2022',
     location: 'Rexburg, ID',
     duties: [
+      'Maintained a predawn shift schedule while balancing a full course load.',
       'Ensured a high level of cleanliness while performing work quickly.',
       'Maintained academic integrity while in offices by leaving papers and computers untouched.',
     ],
