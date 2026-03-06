@@ -3,10 +3,12 @@ import posts, { allPosts } from '../data/blog'
 import BlogCard from '../components/BlogCard'
 import useDocTitle from '../hooks/useDocTitle'
 import useMetaDescription from '../hooks/useMetaDescription'
+import useOpenGraph from '../hooks/useOpenGraph'
 
 export default function BlogHub() {
   useDocTitle('Blog')
   useMetaDescription('Thoughts on software engineering, projects, and things I\'ve learned along the way.')
+  useOpenGraph({ title: 'Blog', description: "Thoughts on software engineering, projects, and things I've learned along the way.", url: '#/blog' })
 
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTag = searchParams.get('tag') || ''
@@ -27,7 +29,7 @@ export default function BlogHub() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold text-white dark:text-white mb-2">Blog</h1>
       <p className="text-gray-300 dark:text-gray-400 mb-6">
-        Thoughts on software engineering, projects, and things I've learned along the way.
+        Thoughts on software engineering, projects, and things I&apos;ve learned along the way.
       </p>
 
       {allTags.length > 0 && (

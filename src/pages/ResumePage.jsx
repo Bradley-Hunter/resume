@@ -1,9 +1,11 @@
 import useMetaDescription from '../hooks/useMetaDescription'
+import useOpenGraph from '../hooks/useOpenGraph'
 import { about, skills, employment, education } from '../data/resume'
 import { phone, email, github, linkedin } from '../data/contact'
 
 export default function ResumePage() {
   useMetaDescription('Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, C++, and TypeScript.')
+  useOpenGraph({ title: 'Resume', description: 'Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, C++, and Python.', url: '#/resume' })
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 print:p-0 print:max-w-none animate-page">
       {/* Print button — hidden when printing */}

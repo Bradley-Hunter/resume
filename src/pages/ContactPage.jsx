@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import useDocTitle from '../hooks/useDocTitle'
 import useMetaDescription from '../hooks/useMetaDescription'
+import useOpenGraph from '../hooks/useOpenGraph'
 import { email, github, linkedin } from '../data/contact'
 
 export default function ContactPage() {
   useDocTitle('Contact')
   useMetaDescription('Get in touch with Bradley Hunter via email, GitHub, LinkedIn, or a direct message.')
+  useOpenGraph({ title: 'Contact', description: 'Get in touch with Bradley Hunter via email, GitHub, LinkedIn, or a direct message.', url: '#/contact' })
   const [status, setStatus] = useState('idle') // idle | sending | success | error
 
   async function handleSubmit(e) {
@@ -28,7 +30,7 @@ export default function ContactPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold text-white dark:text-white mb-4">Get in Touch</h1>
       <p className="text-gray-200 dark:text-gray-300 leading-relaxed mb-10">
-        I'm always open to discussing new opportunities, interesting projects, or just connecting.
+        I&apos;m always open to discussing new opportunities, interesting projects, or just connecting.
         Feel free to reach out through any of the channels below.
       </p>
 
@@ -135,7 +137,7 @@ export default function ContactPage() {
               {status === 'sending' ? 'Sending…' : 'Send Message'}
             </button>
             {status === 'success' && (
-              <p className="text-sm text-green-400">Message sent! I'll get back to you soon.</p>
+              <p className="text-sm text-green-400">Message sent! I&apos;ll get back to you soon.</p>
             )}
             {status === 'error' && (
               <p className="text-sm text-red-400">Something went wrong. Please try again.</p>

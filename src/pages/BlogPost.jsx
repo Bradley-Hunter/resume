@@ -5,6 +5,7 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import posts, { allPosts } from '../data/blog'
 import useDocTitle from '../hooks/useDocTitle'
 import useMetaDescription from '../hooks/useMetaDescription'
+import useOpenGraph from '../hooks/useOpenGraph'
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -13,6 +14,7 @@ export default function BlogPost() {
   const post = (preview ? allPosts : posts).find((p) => p.slug === slug)
   useDocTitle(post?.title ?? 'Post Not Found')
   useMetaDescription(post?.description)
+  useOpenGraph({ title: post?.title, description: post?.description, url: `#/blog/${slug}`, type: 'article' })
 
   if (!post) {
     return (

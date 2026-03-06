@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#111827"/>
+
+  <!-- Gold left accent bar -->
+  <rect x="0" y="0" width="6" height="630" fill="#c6b67d"/>
+
+  <!-- Subtle bottom strip -->
+  <rect x="0" y="596" width="1200" height="34" fill="#0f172a"/>
+
+  <!-- BH badge -->
+  <rect x="80" y="72" width="72" height="72" rx="8" fill="#1f2937" stroke="#c6b67d" stroke-width="1.5"/>
+  <text x="116" y="116" text-anchor="middle" font-family="Consolas,'Courier New',monospace" font-weight="700" font-size="28" fill="#c6b67d">BH</text>
+
+  <!-- Name -->
+  <text x="80" y="295" font-family="Consolas,'Courier New',monospace" font-weight="700" font-size="72" fill="#f9fafb">Bradley Hunter</text>
+
+  <!-- Gold underline -->
+  <rect x="80" y="315" width="180" height="3" fill="#c6b67d"/>
+
+  <!-- Title -->
+  <text x="80" y="372" font-family="Consolas,'Courier New',monospace" font-size="34" fill="#9ca3af">Software Engineer</text>
+
+  <!-- Skills -->
+  <text x="80" y="432" font-family="Consolas,'Courier New',monospace" font-size="26" fill="#c6b67d">Rust  ·  C++  ·  Python  ·  Systems Programming</text>
+
+  <!-- URL -->
+  <text x="80" y="614" font-family="Consolas,'Courier New',monospace" font-size="20" fill="#4b5563">bradley-hunter.github.io/resume</text>
+</svg>

@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
 import DevStylePanel from './DevStylePanel'
+import ErrorBoundary from './ErrorBoundary'
 
 export default function Layout() {
   return (
@@ -14,7 +15,9 @@ export default function Layout() {
       </a>
       <Header />
       <main id="main-content" className="flex-1 animate-page">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <Footer />
       {import.meta.env.DEV && <DevStylePanel />}

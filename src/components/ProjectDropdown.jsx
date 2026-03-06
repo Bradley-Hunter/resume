@@ -1,12 +1,11 @@
 import { useState, useRef, useCallback } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import projects from '../data/projects'
 
 export default function ProjectDropdown() {
   const [open, setOpen] = useState(false)
   const itemRefs = useRef([])
   const triggerRef = useRef(null)
-  const navigate = useNavigate()
   let timeout = useRef(null)
 
   const openMenu = useCallback(() => {

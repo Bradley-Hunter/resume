@@ -5,6 +5,7 @@ import CodeBlock from '../components/CodeBlock'
 import ToolBadge from '../components/ToolBadge'
 import useDocTitle from '../hooks/useDocTitle'
 import useMetaDescription from '../hooks/useMetaDescription'
+import useOpenGraph from '../hooks/useOpenGraph'
 
 export default function ProjectPage() {
   const { slug } = useParams()
@@ -12,6 +13,7 @@ export default function ProjectPage() {
   const relatedPosts = posts.filter((p) => p.tags.includes(slug))
   useDocTitle(project?.title ?? 'Project Not Found')
   useMetaDescription(project ? project.description.slice(0, 160) : undefined)
+  useOpenGraph({ title: project?.title, description: project ? project.description.slice(0, 160) : undefined, url: `#/projects/${slug}` })
 
   if (!project) {
     return (
