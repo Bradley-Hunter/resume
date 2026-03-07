@@ -2,7 +2,7 @@
 title: Using AI to Rebuild My Portfolio
 date: 2026-03-04
 description: What it's actually like handing an AI agent the keys to your personal site, from a static HTML page to a full React app and beyond.
-tags: dev, ai
+tags: dev, ai, portfolio
 featured: true
 ---
 

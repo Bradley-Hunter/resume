@@ -4,6 +4,17 @@ import { pythonProjectFiles } from './code/python-projects'
 
 const projects = [
   {
+    slug: 'portfolio',
+    title: 'Portfolio Website',
+    featured: true,
+    date: 'July 2022',
+    description: 'The site you\'re looking at right now. A single-page application built with React and Tailwind CSS, featuring dark/light theming, a blog with Markdown rendering, project showcases with embedded code viewers and YouTube demos, and automated deployment to GitHub Pages.',
+    tools: ['React', 'Vite', 'Tailwind CSS', 'React Router', 'React Markdown', 'GitHub Pages', 'Claude Code'],
+    github: 'https://github.com/Bradley-Hunter/resume',
+    files: [],
+    media: null,
+  },
+  {
     slug: 'vellum',
     title: 'Vellum Web Browser',
     featured: true,
@@ -51,7 +62,7 @@ const projects = [
   {
     slug: 'gpib',
     title: 'GPIB Hello World',
-    featured: true,
+    featured: false,
     description: 'A Rust program for discovering and identifying instruments on a GPIB bus using the NI-VISA driver stack. Beyond the code itself, a significant challenge was configuring the development environment: coordinating NI-VISA and NI-488.2 driver installations with the visa-rs crate\'s build requirements to get Rust talking to test-and-measurement hardware.',
     tools: ['Rust', 'visa-rs', 'NI-VISA', 'NI-488.2'],
     github: null,
