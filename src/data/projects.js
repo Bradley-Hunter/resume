@@ -1,102 +1,10 @@
-import { listProgramFiles } from './code/list-program'
-import { canvasApiFiles } from './code/canvas-api'
-import { pythonProjectFiles } from './code/python-projects'
+// Auto-discovers all .js files in ./projects/ folder.
+// Each file exports a default project object with at minimum:
+//   slug, title, order, description, tools, files
 
-const projects = [
-  {
-    slug: 'portfolio',
-    title: 'Portfolio Website',
-    featured: true,
-    date: 'July 2022',
-    description: 'The site you\'re looking at right now. A single-page application built with React and Tailwind CSS, featuring dark/light theming, a blog with Markdown rendering, project showcases with embedded code viewers and YouTube demos, and automated deployment to GitHub Pages.',
-    tools: ['React', 'Vite', 'Tailwind CSS', 'React Router', 'React Markdown', 'GitHub Pages', 'Claude Code'],
-    github: 'https://github.com/Bradley-Hunter/resume',
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'vellum',
-    title: 'Vellum Web Browser',
-    featured: true,
-    date: 'Jan 2026',
-    description: 'A feature-rich tabbed web browser desktop application with workspace management, tiling split panes for simultaneous multi-site viewing, a built-in text editor, bookmarks with folders, searchable browsing history, and automatic session persistence, all backed by a local SQLite database.',
-    tools: ['TypeScript', 'React', 'Electron', 'Vite', 'Tailwind CSS', 'Zustand', 'SQLite', 'Vitest', 'React Testing Library', 'ESLint', 'Claude Code'],
-    github: 'https://github.com/Bradley-Hunter/vellum-releases',
-    githubNote: 'Links to the public releases repository — source code is private.',
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'canvas-api',
-    title: 'Canvas by Instructure API App',
-    description: 'A desktop application that interacts with the API for Canvas by Instructure. Uses Rust for the backend with Tauri for the desktop framework, and JavaScript/HTML/CSS for the frontend.',
-    tools: ['Rust', 'serde', 'reqwest', 'Tauri', 'HTML', 'CSS', 'JavaScript'],
-    github: null,
-    files: canvasApiFiles,
-    media: { type: 'youtube', id: 'NpEaa2P7qZI' },
-  },
-  {
-    slug: 'list-program',
-    title: 'List Program',
-    description: 'Three separate terminal-based programs, each built from scratch in a different language (Java, C++, and Rust), that allow one to keep and store multiple lists of items. Each implementation demonstrates proficiency in the syntax and idioms of its respective language.',
-    tools: ['Rust', 'Java', 'C++', 'JSON'],
-    github: null,
-    groupLinks: {
-      'Java': 'https://github.com/Bradley-Hunter/ListOfListsJava',
-      'C++': 'https://github.com/Bradley-Hunter/ListOfListsCPP',
-      'Rust': 'https://github.com/Bradley-Hunter/ListOfListsRust',
-    },
-    files: listProgramFiles,
-    media: { type: 'youtube', id: '0oIDNygpOJM' },
-  },
-  {
-    slug: 'derivative-calc',
-    title: 'Derivative Calculator',
-    description: 'A GUI-based calculator that computes the derivative of a given equation, graphs it, and can compute the derivative at a given point.',
-    learnings: 'Built as a class assignment for Programming with Functions. The focus was on learning Python syntax and basic GUI programming with tkinter, alongside scientific libraries like matplotlib, numpy, and pyparsing for graphing and equation parsing.',
-    tools: ['Python', 'ctypes', 'tkinter', 'matplotlib', 'numpy', 'pyparsing'],
-    github: null,
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'gpib',
-    title: 'GPIB Hello World',
-    featured: false,
-    description: 'A Rust program for discovering and identifying instruments on a GPIB bus using the NI-VISA driver stack. Beyond the code itself, a significant challenge was configuring the development environment: coordinating NI-VISA and NI-488.2 driver installations with the visa-rs crate\'s build requirements to get Rust talking to test-and-measurement hardware.',
-    tools: ['Rust', 'visa-rs', 'NI-VISA', 'NI-488.2'],
-    github: null,
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'batch-installer',
-    title: 'Installation Batch File',
-    description: 'A Windows batch file to allow one to quickly install all the programs needed for running Intel\'s Voltage Regulator Test Suite as required by the company Infineon Technologies AG. The installed version of Python is installed alongside the needed libraries.',
-    tools: ['Batch', 'Python'],
-    github: null,
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'linked-list',
-    title: 'Basic Linked List',
-    description: 'A singly Linked List implemented in C with functionality to add and remove items from the list.',
-    learnings: 'A class assignment from C Language, an introductory course covering the fundamentals of programming in C. The linked list served as a hands-on exercise in manual memory management and pointer arithmetic.',
-    tools: ['C', 'stdio.h', 'string.h', 'stdlib.h', 'stdbool.h'],
-    github: null,
-    files: [],
-    media: null,
-  },
-  {
-    slug: 'python-projects',
-    title: 'Python Projects',
-    description: 'A collection of Python programs developed for the CSE 130 Algorithm Design class at Brigham Young University-Idaho, including a sort algorithm and a Francois number sequence generator.',
-    tools: ['Python', 'JSON'],
-    github: null,
-    files: pythonProjectFiles,
-    media: null,
-  },
-]
+const modules = import.meta.glob('./projects/*.js', { import: 'default', eager: true })
+
+const projects = Object.values(modules)
+  .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity) || a.slug.localeCompare(b.slug))
 
 export default projects

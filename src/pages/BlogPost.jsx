@@ -6,6 +6,7 @@ import posts, { allPosts } from '../data/blog'
 import useDocTitle from '../hooks/useDocTitle'
 import useMetaDescription from '../hooks/useMetaDescription'
 import useOpenGraph from '../hooks/useOpenGraph'
+import Giscus from '@giscus/react';
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -15,6 +16,7 @@ export default function BlogPost() {
   useDocTitle(post?.title ?? 'Post Not Found')
   useMetaDescription(post?.description)
   useOpenGraph({ title: post?.title, description: post?.description, url: `#/blog/${slug}`, type: 'article' })
+
 
   if (!post) {
     return (
@@ -119,6 +121,22 @@ export default function BlogPost() {
           All Posts
         </Link>
       </div>
+
+      <Giscus 
+        repo="bradley-hunter/resume"
+        repo-id="R_kgDOJDrhFg"
+        category="Blog Posts"
+        category-id="DIC_kwDOJDrhFs4C3_YR"
+        mapping="specific"
+        term={slug}
+        strict="0"
+        reactions-enabled="1"
+        emit-metadata="0"
+        input-position="top"
+        theme="transparent_dark"
+        lang="en"
+      />
+
     </div>
   )
 }
