@@ -108,7 +108,7 @@ export default function ProjectPage() {
       )}
 
       {/* Code Files */}
-      {project.files.length > 0 && (() => {
+      {project.files?.length > 0 && (() => {
         const hasGroups = project.files.some((f) => f.group)
         if (hasGroups) {
           const groups = []
@@ -168,7 +168,7 @@ export default function ProjectPage() {
         )
       })()}
 
-      {project.files.length === 0 && !project.github && (
+      {!project.files?.length && !project.github && (
         <p className="text-gray-300 dark:text-gray-400 italic">
           Code samples for this project are not yet available online.
         </p>
