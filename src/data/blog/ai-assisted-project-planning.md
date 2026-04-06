@@ -3,7 +3,7 @@ title: From Inklings to Design Docs with AI
 date: 2026-03-29
 description: How I use AI as a planning partner to turn half-formed project ideas into real design documents before writing any code.
 tags: dev, ideas-repo
-draft: false
+featured: true
 ---
 
 I have a repo with no code in it. No source files, no tests, no CI config, no package manifests. It holds project ideas, design documents, architecture decisions, and developer profiles. Four projects live there now, ranging from a handful of docs to over a dozen each. None of them started as more than a sentence in my head.
