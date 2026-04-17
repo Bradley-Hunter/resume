@@ -4,6 +4,7 @@ export default {
   slug: 'list-program',
   title: 'List Program',
   order: 4,
+  archived: true,
   description: 'Three separate terminal-based programs, each built from scratch in a different language (Java, C++, and Rust), that allow one to keep and store multiple lists of items. Each implementation demonstrates proficiency in the syntax and idioms of its respective language.',
   tools: ['Rust', 'Java', 'C++', 'JSON'],
   github: null,

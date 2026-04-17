@@ -117,7 +117,7 @@ export default function Header() {
                   >
                     All Projects
                   </Link>
-                  {projects.map((project) => (
+                  {projects.filter((p) => !p.archived).map((project) => (
                     <Link
                       key={project.slug}
                       to={`/projects/${project.slug}`}

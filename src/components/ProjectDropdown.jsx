@@ -94,7 +94,7 @@ export default function ProjectDropdown() {
 
       {open && (
         <div role="menu" className="absolute top-full left-0 mt-1 w-64 py-2 bg-gray-900 border border-gray-700 rounded-xl shadow-lg">
-          {projects.map((project, i) => (
+          {projects.filter((p) => !p.archived).map((project, i) => (
             <NavLink
               key={project.slug}
               ref={(el) => (itemRefs.current[i] = el)}

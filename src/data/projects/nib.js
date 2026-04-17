@@ -9,7 +9,7 @@ export default {
   slug: 'nib',
   title: 'Nib — Clipboard Manager',
   order: 1,
-  featured: true,
+  featured: false,
   date: 'Mar 2026',
   description:
     'A context-aware clipboard manager for Windows that replaces the built-in Win+V history. Nib remembers where you copied something and filters clips by the app you\'re pasting into. It stores all clipboard formats and supports pinned clips, pinned apps, and keyboard navigation.',
