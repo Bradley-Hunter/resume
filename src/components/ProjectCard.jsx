@@ -24,7 +24,7 @@ export default function ProjectCard({ project, featured }) {
       <p className={`mt-2 text-gray-200 dark:text-gray-400 ${
         featured ? 'text-sm' : 'text-sm line-clamp-3'
       }`}>
-        {project.description}
+        {project.summary ?? project.description.split('\n\n')[0]}
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
         {project.tools.slice(0, featured ? 8 : 5).map((tool) => (

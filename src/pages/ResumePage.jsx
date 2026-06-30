@@ -1,11 +1,11 @@
 import useMetaDescription from '../hooks/useMetaDescription'
 import useOpenGraph from '../hooks/useOpenGraph'
-import { about, skills, employment, education } from '../data/resume'
+import { resumeAbout, skills, employment, employmentAdditional, education, projects } from '../data/resume'
 import { phone, email, github, linkedin } from '../data/contact'
 
 export default function ResumePage() {
-  useMetaDescription('Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, C++, and TypeScript.')
-  useOpenGraph({ title: 'Resume', description: 'Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, C++, and Python.', url: '#/resume' })
+  useMetaDescription('Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, TypeScript, and C++.')
+  useOpenGraph({ title: 'Resume', description: 'Resume of Bradley Hunter — Software Engineering student at BYU-Idaho, graduating Dec 2026. Proficient in Rust, TypeScript, and C++.', url: '#/resume' })
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 print:p-0 print:max-w-none animate-page">
       {/* Print button — hidden when printing */}
@@ -26,28 +26,24 @@ export default function ResumePage() {
 
         {/* Header */}
         <div className="resume-section border-b-2 border-gray-800 pb-3 mb-4">
-          {/* Top row: linkedin left, email right */}
           <div className="flex justify-between text-sm text-gray-600 mb-1">
             <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-gray-800">linkedin.com/in/bradley-hunter-68ab9a218</a>
             <a href={`mailto:${email}`} className="hover:text-gray-800">{email}</a>
           </div>
-          {/* Name row: phone left, name centered, empty right */}
           <div className="grid grid-cols-3 items-baseline">
             <div />
             <h1 className="text-3xl font-bold tracking-tight text-center">Bradley Hunter</h1>
             <span className="text-sm text-gray-600 text-right">{phone}</span>
           </div>
-          {/* Bottom row: github left, portfolio right */}
           <div className="flex justify-between text-sm text-gray-600 mt-1">
             <a href={github} target="_blank" rel="noopener noreferrer" className="hover:text-gray-800">www.github.com/Bradley-Hunter</a>
             <a href="https://bradley-hunter.github.io/resume/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800">bradley-hunter.github.io/resume/</a>
           </div>
         </div>
 
-        {/* About */}
+        {/* Summary — no header */}
         <section className="resume-section mb-5">
-          <h2 className="text-sm font-bold border-b border-gray-400 mb-2">About</h2>
-          <p className="text-sm leading-relaxed text-gray-800">{about}</p>
+          <p className="text-sm leading-relaxed text-gray-800">{resumeAbout}</p>
         </section>
 
         {/* Education */}
@@ -60,28 +56,27 @@ export default function ResumePage() {
           </div>
           <div className="mt-1 space-y-0.5 text-sm pl-4">
             <p><span className="font-semibold">Major:</span> {education.degree}</p>
-            <p><span className="font-semibold">Emphasis:</span> {education.emphasis}</p>
+            {education.depth && <p>{education.depth}</p>}
           </div>
         </section>
 
         {/* Skills */}
         <section className="resume-section mb-5">
           <h2 className="text-sm font-bold border-b border-gray-400 mb-2">Skills</h2>
-          <div className="text-sm text-gray-800 space-y-0.5">
+          <div className="text-sm text-gray-800 space-y-0.5 pl-4">
             <p>
-              <span className="font-semibold">Software: </span>
-              <span className="italic">(proficient)</span>: {skills.proficient.join(', ')}&ensp;
-              <span className="italic">(familiar)</span>: {skills.familiar.join(', ')}
+              <span className="font-semibold">Languages </span>
+              <span className="italic">({skills.languagesNote})</span>: {skills.languages}
             </p>
             <p>
-              <span className="font-semibold">Tools: </span>
-              {skills.tools.join(', ')}
+              <span className="font-semibold">Coursework exposure: </span>
+              {skills.courseworkExposure}
             </p>
           </div>
         </section>
 
         {/* Employment */}
-        <section>
+        <section className="resume-section mb-5">
           <h2 className="text-sm font-bold border-b border-gray-400 mb-2">Employment</h2>
           <div className="resume-jobs flex flex-col gap-4">
             {employment.map((job, i) => (
@@ -96,6 +91,31 @@ export default function ResumePage() {
                     <li key={j} className="text-sm text-gray-800 flex gap-2 pl-2">
                       <span className="shrink-0">•</span>
                       {duty}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <p className="text-sm text-gray-600 italic">{employmentAdditional}</p>
+          </div>
+        </section>
+
+        {/* Software Projects */}
+        <section>
+          <h2 className="text-sm font-bold border-b border-gray-400 mb-2">Software Projects</h2>
+          <div className="resume-projects flex flex-col gap-4">
+            {projects.map((project, i) => (
+              <div key={i}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-2 text-sm font-bold">
+                  <span>{project.name}</span>
+                  {project.subtitle && <span>{project.subtitle}</span>}
+                  <span>{project.date}</span>
+                </div>
+                <ul className="mt-0.5 flex flex-col gap-0.5">
+                  {project.bullets.map((bullet, j) => (
+                    <li key={j} className="text-sm text-gray-800 flex gap-2 pl-2">
+                      <span className="shrink-0">•</span>
+                      {bullet}
                     </li>
                   ))}
                 </ul>

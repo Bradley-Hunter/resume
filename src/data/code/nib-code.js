@@ -230,511 +230,158 @@ unsafe fn get_uwp_child_process_name(hwnd: HWND) -> Option<String> {
 
     data.child_name
 }` },
-{ name: 'paste.rs', language: 'rust', code: `use crate::storage::db::Clip;
-use log::{debug, warn};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
-use std::time::Duration;
-use windows::Win32::Foundation::HWND;
-use windows::Win32::System::DataExchange::{
-    CloseClipboard, EmptyClipboard, OpenClipboard, RegisterClipboardFormatW, SetClipboardData,
-};
-use windows::Win32::System::Memory::{GlobalAlloc, GlobalLock, GlobalUnlock, GMEM_MOVEABLE};
-use windows::Win32::UI::Input::KeyboardAndMouse::{
-    GetKeyState, SendInput, INPUT, INPUT_KEYBOARD, KEYBDINPUT, KEYBD_EVENT_FLAGS,
-    KEYEVENTF_KEYUP, VK_CONTROL, VK_LWIN, VK_MENU, VK_SHIFT, VK_V, VIRTUAL_KEY,
-};
-use windows::core::PCWSTR;
+{ name: 'sensitive.rs', language: 'rust', code: `use crate::config::NibConfig;
 
-/// Writes a clip's formats to the clipboard without simulating a paste keystroke.
-pub fn write_clip_to_clipboard(clip: &Clip, is_self_writing: &Arc<AtomicBool>) {
-    unsafe {
-        is_self_writing.store(true, Ordering::SeqCst);
-        if !write_formats_to_clipboard(clip) {
-            is_self_writing.store(false, Ordering::SeqCst);
+/// Known password manager process names (lowercase for comparison).
+const DEFAULT_PASSWORD_MANAGERS: &[&str] = &[
+    "1password.exe",
+    "bitwarden.exe",
+    "keepass.exe",
+    "keepassxc.exe",
+    "lastpass.exe",
+    "dashlane.exe",
+    "roboform.exe",
+    "enpass.exe",
+];
+
+/// Token prefixes that indicate secrets.
+const SECRET_PREFIXES: &[&str] = &[
+    "ghp_",   // GitHub personal access token
+    "gho_",   // GitHub OAuth token
+    "ghs_",   // GitHub server-to-server token
+    "ghu_",   // GitHub user-to-server token
+    "sk-",    // OpenAI / Stripe secret key
+    "pk_",    // Stripe publishable key
+    "Bearer ", // Authorization header
+    "eyJ",    // JWT (base64-encoded JSON)
+    "AKIA",   // AWS access key ID
+    "xox",    // Slack tokens (xoxb-, xoxp-, xoxa-, xoxs-)
+];
+
+/// Checks if a clipboard entry appears to be sensitive content.
+///
+/// Detection heuristics:
+/// 1. Source app is a known password manager
+/// 2. Content matches known secret token prefixes
+/// 3. Content looks like a high-entropy short string (password-like)
+pub fn is_sensitive(plain_text: Option<&str>, source_app: &str, config: &NibConfig) -> bool {
+    // Check source app against password manager list
+    if is_password_manager(source_app, config) {
+        return true;
+    }
+
+    // Check content patterns
+    if let Some(text) = plain_text {
+        if matches_secret_pattern(text) {
+            return true;
+        }
+        if is_high_entropy_short_string(text) {
+            return true;
         }
     }
+
+    false
 }
 
-/// Pastes a clip by writing all its formats to the clipboard and simulating Ctrl+V.
-pub fn paste_clip(clip: &Clip, is_self_writing: &Arc<AtomicBool>) {
-    unsafe {
-        is_self_writing.store(true, Ordering::SeqCst);
+fn is_password_manager(source_app: &str, config: &NibConfig) -> bool {
+    let app_lower = source_app.to_lowercase();
 
-        if !write_formats_to_clipboard(clip) {
-            is_self_writing.store(false, Ordering::SeqCst);
-            return;
+    // Check user-configured list first
+    for pm in &config.password_manager_apps {
+        if app_lower == pm.to_lowercase() {
+            return true;
         }
-
-        std::thread::sleep(Duration::from_millis(50));
-        send_ctrl_v();
     }
+
+    // Fall back to built-in list
+    DEFAULT_PASSWORD_MANAGERS
+        .iter()
+        .any(|pm| app_lower == *pm)
 }
 
-/// Writes all stored formats to the clipboard. Returns true on success.
-unsafe fn write_formats_to_clipboard(clip: &Clip) -> bool {
-    if OpenClipboard(HWND::default()).is_err() {
-        warn!("write_formats_to_clipboard: failed to open clipboard");
+fn matches_secret_pattern(text: &str) -> bool {
+    let trimmed = text.trim();
+    // Only check single-line strings (secrets are typically one line)
+    if trimmed.contains('\\n') {
+        return false;
+    }
+    SECRET_PREFIXES.iter().any(|prefix| trimmed.starts_with(prefix))
+}
+
+/// Detects high-entropy short strings that look like passwords or API keys.
+/// Criteria: 8-128 chars, single line, high character diversity, no spaces.
+fn is_high_entropy_short_string(text: &str) -> bool {
+    let trimmed = text.trim();
+
+    // Must be a single line, 8-128 characters, no spaces
+    if trimmed.contains('\\n') || trimmed.contains(' ') {
+        return false;
+    }
+    let len = trimmed.len();
+    if len < 8 || len > 128 {
         return false;
     }
 
-    if EmptyClipboard().is_err() {
-        warn!("write_formats_to_clipboard: failed to empty clipboard");
-        let _ = CloseClipboard();
-        return false;
-    }
+    // Calculate Shannon entropy
+    let entropy = shannon_entropy(trimmed);
 
-    for format in &clip.formats {
-        let format_id = resolve_format_id(&format.format_type);
-        if format_id == 0 {
-            continue;
-        }
-
-        match GlobalAlloc(GMEM_MOVEABLE, format.content.len()) {
-            Ok(hmem) => {
-                let ptr = GlobalLock(hmem);
-                if !ptr.is_null() {
-                    std::ptr::copy_nonoverlapping(
-                        format.content.as_ptr(),
-                        ptr as *mut u8,
-                        format.content.len(),
-                    );
-                    let _ = GlobalUnlock(hmem);
-
-                    let handle = windows::Win32::Foundation::HANDLE(hmem.0);
-                    if let Err(e) = SetClipboardData(format_id, handle) {
-                        debug!("write_formats_to_clipboard: failed to set format {}: {}", format.format_type, e);
-                    }
-                }
-            }
-            Err(e) => {
-                debug!("write_formats_to_clipboard: GlobalAlloc failed: {}", e);
-            }
-        }
-    }
-
-    let _ = CloseClipboard();
-    true
+    // Typical passwords/tokens have entropy > 3.5 bits per character
+    // English words average ~4.0-4.5 but always have spaces; single words rarely exceed 3.0
+    entropy > 3.5
 }
 
-fn resolve_format_id(format_type: &str) -> u32 {
-    match format_type {
-        "CF_TEXT" => 1,
-        "CF_BITMAP" => 2,
-        "CF_DIB" => 8,
-        "CF_UNICODETEXT" => 13,
-        "CF_HDROP" => 15,
-        "CF_DIBV5" => 17,
-        _ => {
-            // Custom format — register by name
-            let wide: Vec<u16> = format_type.encode_utf16().chain(std::iter::once(0)).collect();
-            unsafe { RegisterClipboardFormatW(PCWSTR(wide.as_ptr())) }
-        }
+fn shannon_entropy(s: &str) -> f64 {
+    let len = s.len() as f64;
+    if len == 0.0 {
+        return 0.0;
     }
-}
 
-fn send_ctrl_v() {
-    unsafe {
-        // Release any modifier keys that may still be physically held from the hotkey
-        // (e.g. Shift from Ctrl+Shift+V, or Win from Win+V). If they stay "down",
-        // the target app sees Ctrl+Shift+V (paste-as-plain-text) instead of Ctrl+V.
-        let held_modifiers = get_held_modifiers();
-        let mut inputs: Vec<INPUT> = Vec::new();
-
-        // Release held modifiers first
-        for &vk in &held_modifiers {
-            inputs.push(make_key_input(vk, true));
-        }
-
-        // Ctrl+V press/release
-        inputs.push(make_key_input(VK_CONTROL.0, false));
-        inputs.push(make_key_input(VK_V.0, false));
-        inputs.push(make_key_input(VK_V.0, true));
-        inputs.push(make_key_input(VK_CONTROL.0, true));
-
-        // Re-press modifiers so the user doesn't notice a stuck key on release
-        for &vk in &held_modifiers {
-            inputs.push(make_key_input(vk, false));
-        }
-
-        let size = std::mem::size_of::<INPUT>() as i32;
-        SendInput(&inputs, size);
+    let mut freq = [0u32; 256];
+    for &b in s.as_bytes() {
+        freq[b as usize] += 1;
     }
-}
 
-/// Returns VK codes of modifier keys currently held down (excluding Ctrl, which we send ourselves).
-fn get_held_modifiers() -> Vec<u16> {
-    let mut held = Vec::new();
-    unsafe {
-        // High bit set = key is down
-        if GetKeyState(VK_SHIFT.0 as i32) < 0 {
-            held.push(VK_SHIFT.0);
-        }
-        if GetKeyState(VK_MENU.0 as i32) < 0 {
-            held.push(VK_MENU.0);
-        }
-        if GetKeyState(VK_LWIN.0 as i32) < 0 {
-            held.push(VK_LWIN.0);
-        }
-    }
-    held
-}
-
-// Must match the tag in app.rs ll_keyboard_proc so the hook ignores our synthetic keys
-const NIB_INJECTED_TAG: usize = 0x4E49425F; // "NIB_"
-
-fn make_key_input(vk: u16, key_up: bool) -> INPUT {
-    let flags = if key_up {
-        KEYEVENTF_KEYUP
-    } else {
-        KEYBD_EVENT_FLAGS::default()
-    };
-
-    INPUT {
-        r#type: INPUT_KEYBOARD,
-        Anonymous: windows::Win32::UI::Input::KeyboardAndMouse::INPUT_0 {
-            ki: KEYBDINPUT {
-                wVk: VIRTUAL_KEY(vk),
-                wScan: 0,
-                dwFlags: flags,
-                time: 0,
-                dwExtraInfo: NIB_INJECTED_TAG,
-            },
-        },
-    }
-}` },
-{ name: 'monitor.rs', language: 'rust', code: `use crate::clipboard::content::process_clipboard_data;
-use crate::config::NibConfig;
-use crate::storage::db::ClipDatabase;
-use crate::toast::{ToastManager, ToastType};
-use crate::window::detection::get_foreground_app;
-use chrono::Utc;
-use log::{debug, error, warn};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex};
-use std::time::Instant;
-use windows::Win32::Foundation::{HANDLE, HGLOBAL, HWND, LPARAM, LRESULT, WPARAM};
-use windows::Win32::System::DataExchange::{
-    AddClipboardFormatListener, CloseClipboard, EnumClipboardFormats, GetClipboardData,
-    OpenClipboard, RegisterClipboardFormatW, RemoveClipboardFormatListener,
-};
-use windows::Win32::System::Memory::{GlobalLock, GlobalSize, GlobalUnlock};
-use windows::Win32::UI::WindowsAndMessaging::{
-    CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetMessageW,
-    PostQuitMessage, RegisterClassExW, TranslateMessage, HMENU, HWND_MESSAGE, MSG,
-    WINDOW_EX_STYLE, WINDOW_STYLE, WM_CLIPBOARDUPDATE, WM_DESTROY, WNDCLASSEXW,
-};
-use windows::core::PCWSTR;
-
-struct MonitorState {
-    is_self_writing: Arc<AtomicBool>,
-    db: Arc<ClipDatabase>,
-    config: Arc<std::sync::RwLock<NibConfig>>,
-    toast: Arc<Mutex<ToastManager>>,
-    last_event_hash: Option<String>,
-    last_event_time: Option<Instant>,
-}
-
-static mut MONITOR_STATE: Option<*mut MonitorState> = None;
-
-pub struct ClipboardMonitor {
-    hwnd: HWND,
-    pub is_self_writing: Arc<AtomicBool>,
-}
-
-impl ClipboardMonitor {
-    pub fn new(
-        db: Arc<ClipDatabase>,
-        config: Arc<std::sync::RwLock<NibConfig>>,
-        toast: Arc<Mutex<ToastManager>>,
-    ) -> Option<Self> {
-        let is_self_writing = Arc::new(AtomicBool::new(false));
-
-        let state = Box::new(MonitorState {
-            is_self_writing: is_self_writing.clone(),
-            db,
-            config,
-            toast,
-            last_event_hash: None,
-            last_event_time: None,
-        });
-
-        unsafe {
-            MONITOR_STATE = Some(Box::into_raw(state));
-        }
-
-        let hwnd = Self::create_hidden_window()?;
-
-        unsafe {
-            if AddClipboardFormatListener(hwnd).is_err() {
-                error!("Failed to add clipboard format listener");
-                let _ = DestroyWindow(hwnd);
-                return None;
-            }
-        }
-
-        debug!("Clipboard monitor started");
-
-        Some(Self {
-            hwnd,
-            is_self_writing,
+    freq.iter()
+        .filter(|&&count| count > 0)
+        .map(|&count| {
+            let p = count as f64 / len;
+            -p * p.log2()
         })
-    }
-
-    fn create_hidden_window() -> Option<HWND> {
-        unsafe {
-            let class_name = wide_string("NibClipboardMonitor");
-
-            let wc = WNDCLASSEXW {
-                cbSize: std::mem::size_of::<WNDCLASSEXW>() as u32,
-                lpfnWndProc: Some(wnd_proc),
-                lpszClassName: PCWSTR(class_name.as_ptr()),
-                ..Default::default()
-            };
-
-            let atom = RegisterClassExW(&wc);
-            if atom == 0 {
-                error!("Failed to register clipboard monitor window class");
-                return None;
-            }
-
-            match CreateWindowExW(
-                WINDOW_EX_STYLE::default(),
-                PCWSTR(class_name.as_ptr()),
-                PCWSTR::null(),
-                WINDOW_STYLE::default(),
-                0,
-                0,
-                0,
-                0,
-                HWND_MESSAGE,
-                HMENU::default(),
-                None,
-                None,
-            ) {
-                Ok(hwnd) => Some(hwnd),
-                Err(e) => {
-                    error!("Failed to create clipboard monitor window: {}", e);
-                    None
-                }
-            }
-        }
-    }
-
-    pub fn run_message_loop(&self) {
-        unsafe {
-            let mut msg = MSG::default();
-            while GetMessageW(&mut msg, self.hwnd, 0, 0).as_bool() {
-                let _ = TranslateMessage(&msg);
-                DispatchMessageW(&msg);
-            }
-        }
-    }
+        .sum()
 }
 
-impl Drop for ClipboardMonitor {
-    fn drop(&mut self) {
-        unsafe {
-            let _ = RemoveClipboardFormatListener(self.hwnd);
-            let _ = DestroyWindow(self.hwnd);
-            if let Some(ptr) = MONITOR_STATE.take() {
-                let _ = Box::from_raw(ptr);
-            }
-        }
-    }
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-unsafe extern "system" fn wnd_proc(
-    hwnd: HWND,
-    msg: u32,
-    wparam: WPARAM,
-    lparam: LPARAM,
-) -> LRESULT {
-    match msg {
-        WM_CLIPBOARDUPDATE => {
-            handle_clipboard_update(hwnd);
-            LRESULT(0)
-        }
-        WM_DESTROY => {
-            PostQuitMessage(0);
-            LRESULT(0)
-        }
-        _ => DefWindowProcW(hwnd, msg, wparam, lparam),
-    }
-}
-
-unsafe fn handle_clipboard_update(hwnd: HWND) {
-    let state_ptr = match MONITOR_STATE {
-        Some(ptr) => &mut *ptr,
-        None => return,
-    };
-
-    // Check self-writing flag
-    if state_ptr.is_self_writing.load(Ordering::SeqCst) {
-        state_ptr.is_self_writing.store(false, Ordering::SeqCst);
-        return;
+    #[test]
+    fn test_shannon_entropy() {
+        // All same character = 0 entropy
+        assert!((shannon_entropy("aaaaaaaaaa") - 0.0).abs() < 0.01);
+        // High entropy string
+        assert!(shannon_entropy("aB3$xK9!mN") > 3.0);
     }
 
-    // Read clipboard formats
-    let formats = read_clipboard_formats(hwnd);
-    if formats.is_empty() {
-        return;
+    #[test]
+    fn test_matches_secret_pattern() {
+        assert!(matches_secret_pattern("ghp_abc123def456"));
+        assert!(matches_secret_pattern("sk-proj-abc123"));
+        assert!(matches_secret_pattern("Bearer eyJhbGciOiJ"));
+        assert!(matches_secret_pattern("AKIAIOSFODNN7EXAMPLE"));
+        assert!(!matches_secret_pattern("Hello world"));
+        assert!(!matches_secret_pattern("normal text\\nwith newline"));
     }
 
-    // Get source app
-    let source = match get_foreground_app() {
-        Some(s) => s,
-        None => return,
-    };
-
-    // Get config snapshot
-    let config = match state_ptr.config.read() {
-        Ok(c) => c.clone(),
-        Err(_) => return,
-    };
-
-    // Process clipboard data
-    let clip = match process_clipboard_data(formats, &source, &config) {
-        Some(c) => c,
-        None => return,
-    };
-
-    // Debounce check
-    let now = Instant::now();
-    if let (Some(ref last_hash), Some(last_time)) =
-        (&state_ptr.last_event_hash, state_ptr.last_event_time)
-    {
-        if last_hash == &clip.content_hash && now.duration_since(last_time).as_millis() < 100 {
-            return;
-        }
+    #[test]
+    fn test_high_entropy_short() {
+        // Password-like
+        assert!(is_high_entropy_short_string("xK9!mN2@pQ4#"));
+        // Normal word — low entropy
+        assert!(!is_high_entropy_short_string("password"));
+        // Too long
+        assert!(!is_high_entropy_short_string(&"a".repeat(200)));
+        // Has spaces
+        assert!(!is_high_entropy_short_string("hello world foo"));
     }
-
-    state_ptr.last_event_hash = Some(clip.content_hash.clone());
-    state_ptr.last_event_time = Some(now);
-
-    // Duplicate detection & insertion
-    match state_ptr.db.get_clip_by_hash(&clip.content_hash) {
-        Ok(Some(existing)) => {
-            if let Some(id) = existing.id {
-                if let Err(e) = state_ptr.db.update_clip_timestamp(
-                    id,
-                    Utc::now(),
-                    &clip.source_app,
-                    &clip.source_title,
-                ) {
-                    warn!("Failed to update clip timestamp: {}", e);
-                }
-            }
-        }
-        Ok(None) => {
-            if let Err(e) = state_ptr.db.insert_clip(&clip, &config) {
-                warn!("Failed to insert clip: {}", e);
-            }
-
-            // Check if clipboard is full (all clips pinned, over limit)
-            if config.max_clips > 0 {
-                if let Ok((total, unpinned)) = state_ptr.db.get_clip_count() {
-                    if total >= config.max_clips as u64 && unpinned == 0 {
-                        if let Ok(mut toast) = state_ptr.toast.lock() {
-                            toast.show(
-                                ToastType::ClipboardFull,
-                                &format!(
-                                    "Clipboard full \u{2014} all {} clips are pinned. Unpin or delete a clip to make room for new entries.",
-                                    total
-                                ),
-                            );
-                        }
-                    }
-                }
-            }
-        }
-        Err(e) => {
-            warn!("Failed to check for duplicate: {}", e);
-        }
-    }
-}
-
-unsafe fn read_clipboard_formats(hwnd: HWND) -> Vec<(u32, String, Vec<u8>)> {
-    let mut formats = Vec::new();
-
-    if OpenClipboard(hwnd).is_err() {
-        return formats;
-    }
-
-    // Register custom format names
-    let rtf_format = register_format("Rich Text Format");
-    let html_format = register_format("HTML Format");
-    let png_format = register_format("PNG");
-
-    let mut format_id = EnumClipboardFormats(0);
-    while format_id != 0 {
-        let format_name = get_format_name(format_id, rtf_format, html_format, png_format);
-
-        if is_supported_format(format_id, rtf_format, html_format, png_format) {
-            if let Some(data) = read_format_data(format_id) {
-                formats.push((format_id, format_name, data));
-            }
-        }
-
-        format_id = EnumClipboardFormats(format_id);
-    }
-
-    let _ = CloseClipboard();
-    formats
-}
-
-unsafe fn register_format(name: &str) -> u32 {
-    let wide = wide_string(name);
-    RegisterClipboardFormatW(PCWSTR(wide.as_ptr()))
-}
-
-fn is_supported_format(id: u32, rtf: u32, html: u32, png: u32) -> bool {
-    // CF_BITMAP (2) is an HBITMAP handle, not a global memory block — calling
-    // GlobalLock/GlobalSize on it causes heap corruption. We capture image data
-    // via CF_DIB (8), CF_DIBV5 (17), or PNG instead.
-    matches!(id, 1 | 8 | 13 | 15 | 17) || id == rtf || id == html || id == png
-}
-
-fn get_format_name(id: u32, rtf: u32, html: u32, png: u32) -> String {
-    if id == rtf {
-        "Rich Text Format".to_string()
-    } else if id == html {
-        "HTML Format".to_string()
-    } else if id == png {
-        "PNG".to_string()
-    } else {
-        match id {
-            1 => "CF_TEXT".to_string(),
-            2 => "CF_BITMAP".to_string(),
-            8 => "CF_DIB".to_string(),
-            13 => "CF_UNICODETEXT".to_string(),
-            15 => "CF_HDROP".to_string(),
-            17 => "CF_DIBV5".to_string(),
-            _ => format!("CF_{}", id),
-        }
-    }
-}
-
-unsafe fn read_format_data(format_id: u32) -> Option<Vec<u8>> {
-    let handle: HANDLE = GetClipboardData(format_id).ok()?;
-    let hglobal = HGLOBAL(handle.0);
-    let ptr = GlobalLock(hglobal);
-    if ptr.is_null() {
-        return None;
-    }
-
-    let size = GlobalSize(hglobal);
-    if size == 0 {
-        let _ = GlobalUnlock(hglobal);
-        return None;
-    }
-
-    let data = std::slice::from_raw_parts(ptr as *const u8, size).to_vec();
-    let _ = GlobalUnlock(hglobal);
-    Some(data)
-}
-
-fn wide_string(s: &str) -> Vec<u16> {
-    s.encode_utf16().chain(std::iter::once(0)).collect()
 }` },
 ]

@@ -25,7 +25,7 @@ enum Unit { Cup, Tbsp, Tsp, Oz, Gram, Whole }`
 export default {
   slug: 'ron-schema-validator',
   title: 'ron-schema-validator',
-  order: 1,
+  order: 2,
   featured: true,
   date: 'Apr 2026',
   description:

@@ -48,9 +48,11 @@ export default function ProjectPage() {
         ))}
       </div>
 
-      <p className="text-gray-200 dark:text-gray-300 leading-relaxed mb-4">
-        {project.description}
-      </p>
+      {project.description.split('\n\n').map((para, i) => (
+        <p key={i} className="text-gray-200 dark:text-gray-300 leading-relaxed mb-4">
+          {para}
+        </p>
+      ))}
 
       {project.learnings && (
         <p className="text-sm text-gray-300 dark:text-gray-400 leading-relaxed mb-8 italic">
