@@ -13,7 +13,6 @@ export default defineConfig({
           'code-data': [
             './src/data/code/list-program.js',
             './src/data/code/canvas-api.js',
-            './src/data/code/python-projects.js',
           ],
         },
       },
